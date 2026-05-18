@@ -1,0 +1,914 @@
+/* ============================================================
+   GOLF SCORECARD APP — Global Styles
+   ============================================================ */
+
+/* Design tokens */
+:root {
+  --bg:        #1A1A1A;
+  --card:      #242424;
+  --surface2:  #2E2E2E;
+  --topbar:    #111111;
+  --orange:    #E87722;
+  --orange-lt: #FF9340;
+  --white:     #FFFFFF;
+  --sec:       #888888;
+  --muted:     #555555;
+  --grid:      #333333;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  color: var(--white);
+  background: var(--bg);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg);
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.topbar {
+  background: var(--topbar);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--grid);
+  flex-shrink: 0;
+}
+
+.topbar-course {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-meta {
+  font-size: 12px;
+  color: var(--sec);
+  margin-top: 2px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.icon-btn {
+  background: transparent;
+  color: var(--sec);
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover {
+  color: var(--white);
+  border-color: var(--muted);
+}
+
+.icon-btn-primary {
+  background: var(--orange);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cta-btn {
+  background: var(--orange);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.cta-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.cta-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.secondary-btn {
+  background: var(--surface2);
+  color: var(--white);
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ghost-btn {
+  background: transparent;
+  color: var(--sec);
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.ghost-btn:hover {
+  color: var(--white);
+  border-color: var(--muted);
+}
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
+
+.bottom-nav {
+  background: var(--topbar);
+  border-top: 1px solid var(--grid);
+  display: flex;
+  align-items: center;
+  height: 60px;
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 2px;
+  border-radius: 8px;
+  transition: color 0.15s;
+}
+
+.bnav-item.bnav-active {
+  color: var(--orange);
+}
+
+.bnav-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.bnav-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   SUMMARY STRIP
+   ============================================================ */
+
+.summary-strip {
+  display: flex;
+  justify-content: space-around;
+  background: var(--card);
+  border-bottom: 1px solid var(--grid);
+  padding: 10px 0;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+
+.stat-val-pos {
+  color: var(--orange-lt);
+}
+
+.stat-val-neg {
+  color: #ff6b6b;
+}
+
+.stat-label {
+  font-size: 9px;
+  color: var(--sec);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+.tabs {
+  display: flex;
+  background: var(--card);
+  border-bottom: 1px solid var(--grid);
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sec);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab.tab-active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+}
+
+/* ============================================================
+   SCORECARD TABLE
+   ============================================================ */
+
+.scorecard-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scorecard-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.scorecard-table th {
+  background: var(--surface2);
+  color: var(--sec);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 4px;
+  text-align: center;
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+
+.scorecard-table td {
+  border-bottom: 1px solid var(--grid);
+  text-align: center;
+  padding: 5px 2px;
+  vertical-align: middle;
+}
+
+.scorecard-table tr:hover td {
+  background: rgba(232, 119, 34, 0.05);
+}
+
+.hole-num-cell {
+  width: 36px;
+  font-weight: 700;
+  color: var(--sec);
+  font-size: 12px;
+}
+
+.yards-cell {
+  width: 44px;
+  color: var(--sec);
+  font-size: 12px;
+}
+
+.par-cell {
+  width: 32px;
+  color: var(--sec);
+  font-size: 12px;
+}
+
+.stat-cell {
+  width: 44px;
+  font-size: 12px;
+}
+
+.score-cell {
+  width: 48px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.stat-hit {
+  color: var(--orange-lt);
+  font-weight: 700;
+}
+
+.stat-miss {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
+.stat-na {
+  color: var(--muted);
+}
+
+.delta-under {
+  color: var(--orange-lt);
+  font-weight: 700;
+}
+
+.delta-over {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.delta-even {
+  color: var(--sec);
+}
+
+/* ============================================================
+   SCORING SYMBOLS
+   ============================================================ */
+
+/* Albatross: triple orange circle (box-shadow rings) */
+.sym-albatross {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange-lt);
+  border-radius: 50%;
+  border: 2px solid var(--orange-lt);
+  outline: 3px solid var(--orange-lt);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 147, 64, 0.3);
+  min-width: 28px;
+  min-height: 28px;
+  font-weight: 800;
+}
+
+/* Eagle: double orange circle */
+.sym-eagle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange-lt);
+  border-radius: 50%;
+  border: 2px solid var(--orange-lt);
+  outline: 3px solid var(--orange-lt);
+  outline-offset: 2px;
+  min-width: 28px;
+  min-height: 28px;
+  font-weight: 800;
+}
+
+/* Birdie: single orange circle */
+.sym-birdie {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange-lt);
+  border-radius: 50%;
+  border: 2px solid var(--orange-lt);
+  min-width: 28px;
+  min-height: 28px;
+  font-weight: 700;
+}
+
+/* Par: plain white */
+.sym-par {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  min-width: 28px;
+  min-height: 28px;
+}
+
+/* Bogey: single grey square */
+.sym-bogey {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sec);
+  border: 2px solid #666666;
+  border-radius: 3px;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+/* Double bogey: double grey square */
+.sym-double {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sec);
+  border: 2px solid #666666;
+  outline: 3px solid #666666;
+  outline-offset: 2px;
+  border-radius: 3px;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+/* Triple+: filled dark square */
+.sym-triple {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sec);
+  background: #444444;
+  border-radius: 3px;
+  min-width: 28px;
+  min-height: 28px;
+  font-weight: 600;
+}
+
+/* ============================================================
+   SUBTOTAL / TOTAL ROWS
+   ============================================================ */
+
+.subtotal-row td {
+  background: var(--surface2);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 12px;
+  border-bottom: 2px solid var(--grid);
+}
+
+.total-row td {
+  background: #2a2a2a;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 2px solid var(--orange);
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--grid);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--sec);
+  border-bottom: 1px solid var(--grid);
+  background: var(--surface2);
+}
+
+.card-body {
+  padding: 16px;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sec);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input {
+  background: var(--surface2);
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--white);
+  font-size: 15px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus {
+  border-color: var(--orange);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--grid);
+}
+
+.modal-close-btn {
+  background: transparent;
+  color: var(--sec);
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.modal-close-btn:hover {
+  color: var(--white);
+}
+
+/* ============================================================
+   HANDWRITING PAD
+   ============================================================ */
+
+.canvas-wrap {
+  background: #1a1a1a;
+  border-top: 1px solid var(--grid);
+  border-bottom: 1px solid var(--grid);
+  position: relative;
+  margin: 0;
+  padding: 8px;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.canvas-el {
+  border-radius: 8px;
+  background: var(--card);
+  width: 100%;
+  max-width: 460px;
+  height: 220px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.detected-badge {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: var(--orange);
+  color: var(--white);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   GUIDED HOLE ENTRY
+   ============================================================ */
+
+.field-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--grid);
+}
+
+.field-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--grid);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.field-dot-active {
+  background: var(--orange);
+  transform: scale(1.3);
+}
+
+.field-dot-done {
+  background: var(--orange-lt);
+  opacity: 0.6;
+}
+
+.val-chips-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--card);
+  border-bottom: 1px solid var(--grid);
+}
+
+.val-chip {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 52px;
+  transition: border-color 0.15s;
+  color: var(--muted);
+}
+
+.val-chip-active {
+  border-color: var(--orange);
+  background: rgba(232, 119, 34, 0.1);
+}
+
+.val-chip-set {
+  color: var(--white);
+}
+
+/* ============================================================
+   REFLECTION OPTIONS
+   ============================================================ */
+
+.reflect-opt {
+  padding: 10px 16px;
+  background: var(--surface2);
+  border: 1.5px solid var(--grid);
+  border-radius: 24px;
+  color: var(--sec);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.reflect-opt:hover {
+  border-color: var(--muted);
+  color: var(--white);
+}
+
+.reflect-opt.reflect-opt-selected {
+  background: rgba(232, 119, 34, 0.15);
+  border-color: var(--orange);
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.reflect-opt-multi.reflect-opt-selected {
+  background: rgba(255, 147, 64, 0.15);
+  border-color: var(--orange-lt);
+  color: var(--orange-lt);
+}
+
+/* ============================================================
+   CLUB CARDS
+   ============================================================ */
+
+.club-card {
+  background: var(--card);
+  border: 1px solid var(--grid);
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.club-card:hover {
+  transform: translateY(-1px);
+}
+
+.club-card-inconsistent {
+  border-color: var(--orange);
+}
+
+.club-card-reliable {
+  border-color: #4caf50;
+}
+
+.club-card-needs-dist {
+  border-color: #ff4444;
+}
+
+/* ============================================================
+   INSIGHT CARDS
+   ============================================================ */
+
+.insight-card {
+  background: var(--card);
+  border: 1px solid var(--grid);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.big-score-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+}
+
+.big-stat {
+  text-align: center;
+}
+
+.stat-bar-item {
+  margin-bottom: 14px;
+}
+
+.stat-bar-track {
+  height: 6px;
+  background: var(--grid);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.stroke-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--grid);
+}
+
+.stroke-item:last-child {
+  border-bottom: none;
+}
+
+.priority-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grid);
+}
+
+.priority-item:last-child {
+  border-bottom: none;
+}
+
+/* ============================================================
+   OCR GRID
+   ============================================================ */
+
+.ocr-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ocr-grid-table th {
+  background: var(--surface2);
+  color: var(--sec);
+  padding: 4px 6px;
+  text-align: center;
+  border: 1px solid var(--grid);
+  font-size: 11px;
+}
+
+.ocr-grid-table td {
+  border: 1px solid var(--grid);
+  padding: 4px;
+  text-align: center;
+  background: var(--card);
+}
+
+.ocr-cell-ok {
+  background: var(--card);
+}
+
+.ocr-cell-low {
+  background: rgba(255, 100, 0, 0.12);
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--grid);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  border-bottom: 1px solid var(--grid);
+  margin-bottom: 16px;
+}
