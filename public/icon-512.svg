@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background -->
+  <rect width="512" height="512" fill="#1A1A1A"/>
+
+  <!-- Pin pole -->
+  <rect x="228" y="160" width="56" height="220" fill="#888888" rx="8"/>
+
+  <!-- Pin flag -->
+  <rect x="284" y="120" width="140" height="100" fill="#E87722" rx="12"/>
+
+  <!-- Pin ball -->
+  <circle cx="256" cy="420" r="48" fill="#E87722"/>
+</svg>
