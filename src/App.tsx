@@ -49,21 +49,31 @@ export default function App() {
     return stored.length > 0 ? stored : makeDefaultClubs();
   });
   const [guidedHoleIdx, setGuidedHoleIdx] = useState<number | null>(null);
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(() => window.location.pathname === "/ph-console");
   const [showFeatureReq, setShowFeatureReq] = useState(false);
-
-  // Check for secret admin path
-  useEffect(() => {
-    if (window.location.pathname === "/ph-console") {
-      setShowAdmin(true);
-    }
-  }, []);
 
   // Auth state
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    let mounted = true;
+
+    async function loadSession() {
+      const authCode = new URLSearchParams(window.location.search).get("code");
+      if (authCode) {
+        const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        if (error) {
+          console.error("Email confirmation failed:", error.message);
+        } else {
+          window.history.replaceState({}, document.title, window.location.pathname || "/");
+        }
+      }
+
+      const { data } = await supabase.auth.getSession();
+      if (!mounted) return;
       setSession(data.session);
-    });
+    }
+
+    loadSession();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       if (_event === "SIGNED_IN" && s?.user) {
@@ -74,7 +84,10 @@ export default function App() {
         }).then(() => {});
       }
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Loading state
@@ -85,7 +98,7 @@ export default function App() {
         height: "100%", background: "var(--bg)", color: "var(--sec)"
       }}>
         <div style={{ textAlign: "center" }}>
-          <img src="/icon.svg" alt="Pin High" style={{ width: 72, height: 72, marginBottom: 16 }} />
+          <img src="/icon-192.png" alt="Pin High" style={{ width: 72, height: 72, marginBottom: 16, borderRadius: 18 }} />
           <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADING…</div>
         </div>
       </div>
@@ -171,7 +184,7 @@ export default function App() {
       )}
 
       {/* Main content */}
-      <div style={{ flex: 1, overflowY: "auto" }}>
+      <div className="app-content">
         {view === "setup" && (
           <div>
             <CourseSetup onStart={handleRoundStart} />

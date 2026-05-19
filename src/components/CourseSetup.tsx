@@ -113,17 +113,39 @@ export default function CourseSetup({ onStart }: Props) {
   }
 
   return (
-    <div style={{ padding: "16px 16px 100px" }}>
-      <div className="section-header">
-        <span>New Round Setup</span>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button className="ghost-btn" onClick={() => setShowPresets(true)}>Load Preset</button>
-          <button className="ghost-btn" onClick={() => setShowPhoto(true)}>Photo Import</button>
+    <div className="home-shell">
+      <section className="home-hero">
+        <div className="home-logo-card">
+          <img src="/pin-high-logo.jpg" alt="Pin High" className="home-logo-img" />
         </div>
+        <div className="home-hero-copy">
+          <div className="home-kicker">Mobile Round Command</div>
+          <h1>Pin High</h1>
+          <p>Build the round once, then score fast from the first tee to the final putt.</p>
+        </div>
+      </section>
+
+      <div className="action-rail" aria-label="Round setup shortcuts">
+        <button className="action-card" onClick={() => setShowPresets(true)}>
+          <span className="action-icon">▣</span>
+          <span>
+            <strong>Load Preset</strong>
+            <small>Start from a saved course</small>
+          </span>
+        </button>
+        <button className="action-card" onClick={() => setShowPhoto(true)}>
+          <span className="action-icon">◎</span>
+          <span>
+            <strong>Photo Import</strong>
+            <small>Read yards and par from a card</small>
+          </span>
+        </button>
       </div>
 
       {/* Course Info */}
-      <div className="card" style={{ marginBottom: 16 }}>
+      <div className="section-header">New Round Setup</div>
+
+      <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-body">
           <div className="form-group">
             <label className="form-label">Course Name *</label>
@@ -158,7 +180,7 @@ export default function CourseSetup({ onStart }: Props) {
       </div>
 
       {/* Hole grid */}
-      <div className="card" style={{ marginBottom: 16 }}>
+      <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-header">Hole Information</div>
         <div className="card-body" style={{ overflowX: "auto" }}>
           {["Front 9 (1–9)", "Back 9 (10–18)"].map((label, sectionIdx) => (

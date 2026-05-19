@@ -41,12 +41,7 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
   const [ideas, setIdeas] = useState<FeatureRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadAll();
-  }, []);
-
   async function loadAll() {
-    setLoading(true);
     const [p, l, r, f] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("login_events").select("*").order("logged_in_at", { ascending: false }).limit(100),
@@ -59,6 +54,12 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
     if (f.data) setIdeas(f.data);
     setLoading(false);
   }
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      loadAll();
+    });
+  }, []);
 
   function fmt(iso: string) {
     try {

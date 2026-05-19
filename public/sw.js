@@ -9,10 +9,12 @@ const CACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.svg',
+  '/favicon.png',
   '/icons.svg',
   '/icon-192.png',
   '/icon-512.png',
+  '/pin-high-logo.jpg',
+  '/tee-wallpaper.jpg',
 ];
 
 // Install: cache essential assets

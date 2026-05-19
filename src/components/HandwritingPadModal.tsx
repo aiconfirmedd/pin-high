@@ -13,7 +13,7 @@ type Stroke = Point[];
 export default function HandwritingPadModal({ label, hint, onDetect, onClose }: Props) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [strokes, setStrokes] = React.useState<Stroke[]>([]);
-  const [_currentStroke, setCurrentStroke] = React.useState<Stroke | null>(null);
+  const [, setCurrentStroke] = React.useState<Stroke | null>(null);
   const [detected, setDetected] = React.useState<string | null>(null);
   const detectTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);

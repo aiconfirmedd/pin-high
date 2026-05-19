@@ -23,10 +23,21 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
         if (error) throw error;
         onAuth();
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.origin,
+          },
+        });
         if (error) throw error;
-        setInfo("Check your email to confirm your account, then sign in.");
-        setMode("login");
+        if (data.session) {
+          onAuth();
+          setInfo("Account created. You are signed in.");
+        } else {
+          setInfo("Check your email to confirm your account. The link will bring you back here and sign you in.");
+          setMode("login");
+        }
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -38,11 +49,14 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
   return (
     <div className="auth-screen">
       <div className="auth-card">
-        {/* Logo */}
         <div className="auth-logo">
-          <img src="/icon.svg" alt="Pin High" className="auth-icon" />
-          <div className="auth-brand">PIN HIGH</div>
-          <div className="auth-tagline">Golf Scorecard</div>
+          <div className="auth-logo-frame">
+            <img src="/pin-high-logo.jpg" alt="Pin High" className="auth-icon" />
+          </div>
+          <div className="auth-wordmark">
+            <div className="auth-brand">PIN HIGH</div>
+            <div className="auth-tagline">Golf Scorecard</div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
