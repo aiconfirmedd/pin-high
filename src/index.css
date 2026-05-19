@@ -2,18 +2,29 @@
    GOLF SCORECARD APP — Global Styles
    ============================================================ */
 
-/* Design tokens */
+/* Design tokens — Pin High Premium Metallic */
 :root {
-  --bg:        #1A1A1A;
-  --card:      #242424;
-  --surface2:  #2E2E2E;
-  --topbar:    #111111;
-  --orange:    #E87722;
-  --orange-lt: #FF9340;
-  --white:     #FFFFFF;
-  --sec:       #888888;
-  --muted:     #555555;
-  --grid:      #333333;
+  --bg:          #18181A;
+  --card:        #222224;
+  --surface2:    #2C2C2E;
+  --topbar:      #101012;
+  --copper:      #C4762A;
+  --copper-lt:   #D48B3A;
+  --copper-shine:#E0A550;
+  --orange:      #C4762A;
+  --orange-lt:   #D48B3A;
+  --green:       #2D8A35;
+  --green-lt:    #3DAA45;
+  --white:       #FFFFFF;
+  --sec:         #8E8E93;
+  --muted:       #48484A;
+  --grid:        #38383A;
+
+  /* Metallic gradients */
+  --grad-topbar: linear-gradient(180deg, #1E1E20 0%, #101012 100%);
+  --grad-copper: linear-gradient(135deg, #D48B3A 0%, #C4762A 50%, #8B4E1A 100%);
+  --grad-steel:  linear-gradient(180deg, #2C2C2E 0%, #222224 100%);
+  --grad-card:   linear-gradient(180deg, #252527 0%, #1E1E20 100%);
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -67,13 +78,15 @@ input, textarea {
    ============================================================ */
 
 .topbar {
-  background: var(--topbar);
+  background: var(--grad-topbar);
+  background: linear-gradient(180deg, #1E1E20 0%, #101012 100%);
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid var(--grid);
+  border-bottom: 1px solid #3A3A3C;
   flex-shrink: 0;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .topbar-course {
@@ -119,7 +132,7 @@ input, textarea {
 }
 
 .icon-btn-primary {
-  background: var(--orange);
+  background: linear-gradient(135deg, #D48B3A 0%, #C4762A 55%, #8B4E1A 100%);
   color: var(--white);
   border: none;
   border-radius: 8px;
@@ -127,10 +140,11 @@ input, textarea {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 4px rgba(0,0,0,0.4);
 }
 
 .cta-btn {
-  background: var(--orange);
+  background: linear-gradient(135deg, #D48B3A 0%, #C4762A 55%, #8B4E1A 100%);
   color: var(--white);
   border: none;
   border-radius: 10px;
@@ -139,6 +153,8 @@ input, textarea {
   font-weight: 700;
   cursor: pointer;
   transition: opacity 0.15s;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 3px 8px rgba(0,0,0,0.4);
+  letter-spacing: 0.3px;
 }
 
 .cta-btn:disabled {
@@ -147,7 +163,7 @@ input, textarea {
 }
 
 .cta-btn:hover:not(:disabled) {
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
 .secondary-btn {
@@ -182,13 +198,14 @@ input, textarea {
    ============================================================ */
 
 .bottom-nav {
-  background: var(--topbar);
-  border-top: 1px solid var(--grid);
+  background: linear-gradient(0deg, #101012 0%, #1A1A1C 100%);
+  border-top: 1px solid #3A3A3C;
   display: flex;
   align-items: center;
   height: 60px;
   flex-shrink: 0;
   padding: 0 4px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.04);
 }
 
 .bnav-item {
@@ -310,15 +327,15 @@ input, textarea {
 }
 
 .scorecard-table th {
-  background: var(--surface2);
-  color: var(--sec);
+  background: linear-gradient(180deg, #2C2C2E 0%, #242426 100%);
+  color: var(--copper-shine);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   padding: 6px 4px;
   text-align: center;
-  border-bottom: 1px solid var(--grid);
+  border-bottom: 1px solid #3A3A3C;
   white-space: nowrap;
 }
 
@@ -330,7 +347,7 @@ input, textarea {
 }
 
 .scorecard-table tr:hover td {
-  background: rgba(232, 119, 34, 0.05);
+  background: rgba(196, 118, 42, 0.07);
 }
 
 .hole-num-cell {
@@ -396,45 +413,47 @@ input, textarea {
    SCORING SYMBOLS
    ============================================================ */
 
-/* Albatross: triple orange circle (box-shadow rings) */
+/* Albatross: triple copper circle (box-shadow rings) */
 .sym-albatross {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--orange-lt);
+  color: var(--copper-shine);
   border-radius: 50%;
-  border: 2px solid var(--orange-lt);
-  outline: 3px solid var(--orange-lt);
+  border: 2px solid var(--copper-shine);
+  outline: 3px solid var(--copper-shine);
   outline-offset: 2px;
-  box-shadow: 0 0 0 6px rgba(255, 147, 64, 0.3);
+  box-shadow: 0 0 0 6px rgba(196, 118, 42, 0.3);
   min-width: 28px;
   min-height: 28px;
   font-weight: 800;
+  text-shadow: 0 0 6px rgba(224, 165, 80, 0.5);
 }
 
-/* Eagle: double orange circle */
+/* Eagle: double copper circle */
 .sym-eagle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--orange-lt);
+  color: var(--copper-shine);
   border-radius: 50%;
-  border: 2px solid var(--orange-lt);
-  outline: 3px solid var(--orange-lt);
+  border: 2px solid var(--copper-shine);
+  outline: 3px solid var(--copper-shine);
   outline-offset: 2px;
   min-width: 28px;
   min-height: 28px;
   font-weight: 800;
+  text-shadow: 0 0 6px rgba(224, 165, 80, 0.4);
 }
 
-/* Birdie: single orange circle */
+/* Birdie: single copper circle */
 .sym-birdie {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--orange-lt);
+  color: var(--copper-lt);
   border-radius: 50%;
-  border: 2px solid var(--orange-lt);
+  border: 2px solid var(--copper-lt);
   min-width: 28px;
   min-height: 28px;
   font-weight: 700;
@@ -502,11 +521,11 @@ input, textarea {
 }
 
 .total-row td {
-  background: #2a2a2a;
+  background: linear-gradient(180deg, #252527 0%, #1E1E20 100%);
   color: var(--white);
   font-weight: 700;
   font-size: 13px;
-  border-bottom: 2px solid var(--orange);
+  border-bottom: 2px solid var(--copper);
 }
 
 /* ============================================================
@@ -514,21 +533,23 @@ input, textarea {
    ============================================================ */
 
 .card {
-  background: var(--card);
+  background: linear-gradient(180deg, #252527 0%, #1E1E20 100%);
   border-radius: 12px;
-  border: 1px solid var(--grid);
+  border: 1px solid #3A3A3C;
+  border-top-color: #4A4A4C;
   overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.35);
 }
 
 .card-header {
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--sec);
-  border-bottom: 1px solid var(--grid);
-  background: var(--surface2);
+  letter-spacing: 1px;
+  color: var(--copper-shine);
+  border-bottom: 1px solid #3A3A3C;
+  background: linear-gradient(180deg, #2C2C2E 0%, #242426 100%);
 }
 
 .card-body {
