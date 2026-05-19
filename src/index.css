@@ -1,8 +1,8 @@
 /* ============================================================
-   GOLF SCORECARD APP — Global Styles
+   GOLF SCORECARD APP â Global Styles
    ============================================================ */
 
-/* Design tokens — Pin High Premium Metallic */
+/* Design tokens â Pin High Premium Metallic */
 :root {
   --bg:          #18181A;
   --card:        #222224;
@@ -1141,6 +1141,173 @@ input, textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+
+/* ââ Auth Hero & Premium Landing âââââââââââââââââââââââââ */
+.auth-card--hero {
+  max-width: 420px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.auth-hero {
+  padding: 32px 24px 20px;
+  background:
+    linear-gradient(180deg, rgba(196,118,42,0.08) 0%, transparent 60%),
+    linear-gradient(156deg, rgba(255,255,255,0.03), transparent 40%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.auth-value-prop {
+  text-align: center;
+  color: var(--sec);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 4px;
+  letter-spacing: 0.01em;
+}
+
+.auth-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.auth-feature-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--sec);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.auth-feature-pill:hover {
+  border-color: rgba(196,118,42,0.3);
+  background: rgba(196,118,42,0.06);
+}
+
+.auth-feature-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.auth-feature-label {
+  font-weight: 500;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  margin: 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+.auth-divider span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  white-space: nowrap;
+  padding: 16px 0;
+}
+
+.auth-card--hero .auth-form {
+  padding: 8px 24px 28px;
+}
+
+.auth-forgot-link {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  color: var(--copper);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: -4px 0 4px auto;
+  transition: color 0.2s;
+  min-height: 44px;
+  line-height: 44px;
+}
+
+.auth-forgot-link:hover {
+  color: var(--copper-lt);
+}
+
+.auth-forgot-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.auth-forgot-desc {
+  text-align: center;
+  color: var(--sec);
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.auth-forgot-success {
+  text-align: center;
+  padding: 12px 0 8px;
+}
+
+.auth-forgot-check {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--grad-copper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+  font-weight: 700;
+}
+
+.auth-forgot-success h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.auth-forgot-success p {
+  color: var(--sec);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.auth-forgot-success strong {
+  color: var(--copper-lt);
+}
+
+.auth-forgot-success .auth-btn {
+  margin-top: 8px;
+  min-height: 48px;
+}
+
 @media (max-width: 430px) {
   .setup-grid-two {
     grid-template-columns: 1fr;
@@ -1528,6 +1695,7 @@ input, textarea {
   text-align: center;
   font-size: 13px;
   color: var(--sec);
+  min-height: 44px;
 }
 
 .auth-link {
