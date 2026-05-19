@@ -24,6 +24,7 @@ function makeEmptyHoles(): Hole[] {
 }
 
 export default function CourseSetup({ onStart }: Props) {
+  const [setupMode, setSetupMode] = React.useState<"start" | "previous" | "dashboard">("start");
   const [courseName, setCourseName] = React.useState("");
   const [teeName, setTeeName] = React.useState("");
   const [teeDistance, setTeeDistance] = React.useState<number | "">("");
@@ -34,6 +35,9 @@ export default function CourseSetup({ onStart }: Props) {
   const [showPresets, setShowPresets] = React.useState(false);
   const [showPhoto, setShowPhoto] = React.useState(false);
   const [ocrResult, setOcrResult] = React.useState<{ yards: (number | "")[]; pars: (number | "")[]; confidence: number[] } | null>(null);
+  const [editingHoleIdx, setEditingHoleIdx] = React.useState<number | null>(null);
+  const [draftYards, setDraftYards] = React.useState<number | "">("");
+  const [draftPar, setDraftPar] = React.useState<number | "">("");
   const [error, setError] = React.useState("");
 
   function loadPreset(preset: CoursePreset) {
@@ -66,18 +70,22 @@ export default function CourseSetup({ onStart }: Props) {
     setOcrResult(null);
   }
 
-  function updateHoleYards(i: number, val: string) {
-    const n = parseInt(val, 10);
-    const next = [...holes];
-    next[i] = { ...next[i], yards: isNaN(n) ? "" : n };
-    setHoles(next);
+  function openHoleEditor(idx: number) {
+    setEditingHoleIdx(idx);
+    setDraftYards(holes[idx].yards);
+    setDraftPar(holes[idx].par);
   }
 
-  function updateHolePar(i: number, val: string) {
-    const n = parseInt(val, 10);
+  function applyHoleEditor() {
+    if (editingHoleIdx === null) return;
     const next = [...holes];
-    next[i] = { ...next[i], par: isNaN(n) ? "" : n };
+    next[editingHoleIdx] = {
+      ...next[editingHoleIdx],
+      yards: draftYards,
+      par: draftPar,
+    };
     setHoles(next);
+    setEditingHoleIdx(null);
   }
 
   function handleStart() {
@@ -125,6 +133,22 @@ export default function CourseSetup({ onStart }: Props) {
         </div>
       </section>
 
+      <div className="mode-switch" aria-label="Round actions">
+        {[
+          { id: "start", label: "Start Round" },
+          { id: "previous", label: "Enter Previous" },
+          { id: "dashboard", label: "Dashboard" },
+        ].map(item => (
+          <button
+            key={item.id}
+            className={`mode-pill ${setupMode === item.id ? "mode-pill-active" : ""}`}
+            onClick={() => setSetupMode(item.id as "start" | "previous" | "dashboard")}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       <div className="action-rail" aria-label="Round setup shortcuts">
         <button className="action-card" onClick={() => setShowPresets(true)}>
           <span className="action-icon">▣</span>
@@ -143,7 +167,26 @@ export default function CourseSetup({ onStart }: Props) {
       </div>
 
       {/* Course Info */}
-      <div className="section-header">New Round Setup</div>
+      <div className="section-header">
+        {setupMode === "previous" ? "Enter Previous Round" : setupMode === "dashboard" ? "My Dashboard" : "Start Round"}
+      </div>
+
+      {setupMode === "dashboard" && (
+        <div className="dashboard-preview">
+          <div>
+            <span>Rounds</span>
+            <strong>Ready</strong>
+          </div>
+          <div>
+            <span>Next Step</span>
+            <strong>Start scoring</strong>
+          </div>
+          <div>
+            <span>Tools</span>
+            <strong>Import or manual</strong>
+          </div>
+        </div>
+      )}
 
       <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-body">
@@ -152,7 +195,7 @@ export default function CourseSetup({ onStart }: Props) {
             <input className="form-input" value={courseName} onChange={e => setCourseName(e.target.value)}
               placeholder="e.g. Pebble Beach" />
           </div>
-          <div className="form-row">
+          <div className="setup-grid setup-grid-two">
             <div className="form-group">
               <label className="form-label">Tee</label>
               <input className="form-input" value={teeName} onChange={e => setTeeName(e.target.value)}
@@ -165,7 +208,7 @@ export default function CourseSetup({ onStart }: Props) {
                 placeholder="e.g. 6800" />
             </div>
           </div>
-          <div className="form-row">
+          <div className="setup-grid setup-grid-two">
             <div className="form-group">
               <label className="form-label">Date</label>
               <input className="form-input" type="date" value={date} onChange={e => setDate(e.target.value)} />
@@ -182,45 +225,25 @@ export default function CourseSetup({ onStart }: Props) {
       {/* Hole grid */}
       <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-header">Hole Information</div>
-        <div className="card-body" style={{ overflowX: "auto" }}>
+        <div className="card-body">
           {["Front 9 (1–9)", "Back 9 (10–18)"].map((label, sectionIdx) => (
-            <div key={sectionIdx} style={{ marginBottom: 16 }}>
-              <div style={{ color: "var(--orange)", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{label}</div>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr>
-                    <th style={{ color: "var(--sec)", padding: "4px 6px", textAlign: "center" }}>HOLE</th>
-                    <th style={{ color: "var(--sec)", padding: "4px 6px", textAlign: "center" }}>YDS</th>
-                    <th style={{ color: "var(--sec)", padding: "4px 6px", textAlign: "center" }}>PAR</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from({ length: 9 }, (_, i) => {
-                    const idx = sectionIdx * 9 + i;
-                    return (
-                      <tr key={idx}>
-                        <td style={{ color: "var(--sec)", textAlign: "center", padding: "4px 6px" }}>{idx + 1}</td>
-                        <td style={{ padding: "4px 6px" }}>
-                          <input type="number" value={holes[idx].yards === "" ? "" : holes[idx].yards}
-                            onChange={e => updateHoleYards(idx, e.target.value)}
-                            style={{
-                              width: "100%", background: "var(--surface2)", border: "1px solid var(--grid)",
-                              borderRadius: 4, padding: "5px 8px", color: "var(--white)", fontSize: 13, textAlign: "center"
-                            }} />
-                        </td>
-                        <td style={{ padding: "4px 6px" }}>
-                          <input type="number" min={3} max={5} value={holes[idx].par === "" ? "" : holes[idx].par}
-                            onChange={e => updateHolePar(idx, e.target.value)}
-                            style={{
-                              width: "100%", background: "var(--surface2)", border: "1px solid var(--grid)",
-                              borderRadius: 4, padding: "5px 8px", color: "var(--white)", fontSize: 13, textAlign: "center"
-                            }} />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div key={sectionIdx} className="hole-panel">
+              <div className="hole-panel-title">{label}</div>
+              <div className="hole-entry-head">
+                <span>Hole</span>
+                <span>Yards</span>
+                <span>Par</span>
+              </div>
+              {Array.from({ length: 9 }, (_, i) => {
+                const idx = sectionIdx * 9 + i;
+                return (
+                  <button key={idx} className="hole-entry-row" onClick={() => openHoleEditor(idx)}>
+                    <span className="hole-number">{idx + 1}</span>
+                    <span className="hole-value">{holes[idx].yards === "" ? "Set yards" : `${holes[idx].yards} yds`}</span>
+                    <span className="hole-par">{holes[idx].par === "" ? "Set par" : `Par ${holes[idx].par}`}</span>
+                  </button>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -239,6 +262,62 @@ export default function CourseSetup({ onStart }: Props) {
 
       {showPresets && <SavedPresets onLoad={loadPreset} onClose={() => setShowPresets(false)} />}
       {showPhoto && <PhotoImporter onOcrComplete={handleOcrComplete} onClose={() => setShowPhoto(false)} />}
+      {editingHoleIdx !== null && (
+        <div className="sheet-overlay" onClick={() => setEditingHoleIdx(null)}>
+          <div className="hole-editor-sheet" onClick={e => e.stopPropagation()}>
+            <div className="sheet-handle" />
+            <div className="hole-editor-title">Hole {editingHoleIdx + 1}</div>
+            <label className="picker-label">Yards</label>
+            <div className="yard-picker">
+              <select
+                size={5}
+                value={draftYards === "" ? "" : String(draftYards)}
+                onChange={e => setDraftYards(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
+              >
+                <option value="">No yards</option>
+                {Array.from({ length: 551 }, (_, i) => i + 50).map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={draftYards === "" ? "" : draftYards}
+                onChange={e => setDraftYards(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
+                placeholder="Type yards"
+              />
+            </div>
+
+            <div className="par-picker-title">Par</div>
+            <div className="par-picker">
+              {[3, 4, 5].map(par => (
+                <button
+                  key={par}
+                  className={`par-box ${draftPar === par ? "par-box-active" : ""}`}
+                  onClick={() => setDraftPar(par)}
+                >
+                  {par}
+                </button>
+              ))}
+            </div>
+            <input
+              className="par-type-input"
+              type="number"
+              inputMode="numeric"
+              min={3}
+              max={5}
+              value={draftPar === "" ? "" : draftPar}
+              onChange={e => setDraftPar(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
+              placeholder="Or type par"
+            />
+
+            <div className="sheet-actions">
+              <button className="ghost-btn" onClick={() => setEditingHoleIdx(null)}>Cancel</button>
+              <button className="cta-btn" onClick={applyHoleEditor}>Save Hole</button>
+            </div>
+          </div>
+        </div>
+      )}
       {ocrResult && (
         <OcrReviewGrid
           yards={ocrResult.yards}

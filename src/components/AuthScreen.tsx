@@ -50,9 +50,13 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
     <div className="auth-screen">
       <div className="auth-card">
         <div className="auth-logo">
-          <img src="/icon.svg" alt="Pin High" className="auth-icon" />
-          <div className="auth-brand">PIN HIGH</div>
-          <div className="auth-tagline">Golf Scorecard</div>
+          <div className="auth-logo-frame">
+            <img src="/pin-high-logo.jpg" alt="Pin High" className="auth-icon" />
+          </div>
+          <div className="auth-wordmark">
+            <div className="auth-brand">PIN HIGH</div>
+            <div className="auth-tagline">Golf Scorecard</div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">

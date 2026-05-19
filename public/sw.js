@@ -1,8 +1,8 @@
 // Pin High — Service Worker
 // Cache-first strategy: serve from cache, update in background
 
-const CACHE_NAME = 'pin-high-v1';
-const RUNTIME_CACHE = 'pin-high-runtime-v1';
+const CACHE_NAME = 'pin-high-v2';
+const RUNTIME_CACHE = 'pin-high-runtime-v2';
 
 // Assets to cache on install
 const CACHE_ASSETS = [
