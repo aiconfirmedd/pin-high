@@ -1,6 +1,11 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import type { Round, Club, AppView, Hole } from "./types";
 import { loadClubs, saveClubs, saveRound } from "./utils/localStorageStore";
+import { supabase, OWNER_EMAIL } from "./lib/supabaseClient";
+import AuthScreen from "./components/AuthScreen";
+import AdminDashboard from "./components/AdminDashboard";
+import FeatureRequestModal from "./components/FeatureRequestModal";
 import CourseSetup from "./components/CourseSetup";
 import Scorecard from "./components/Scorecard";
 import RoundInsightView from "./components/RoundInsightView";
@@ -36,13 +41,64 @@ function makeDefaultClubs(): Club[] {
 }
 
 export default function App() {
-  const [view, setView] = React.useState<AppView>("setup");
-  const [round, setRound] = React.useState<Round | null>(null);
-  const [clubs, setClubs] = React.useState<Club[]>(() => {
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
+  const [view, setView] = useState<AppView>("setup");
+  const [round, setRound] = useState<Round | null>(null);
+  const [clubs, setClubs] = useState<Club[]>(() => {
     const stored = loadClubs();
     return stored.length > 0 ? stored : makeDefaultClubs();
   });
-  const [guidedHoleIdx, setGuidedHoleIdx] = React.useState<number | null>(null);
+  const [guidedHoleIdx, setGuidedHoleIdx] = useState<number | null>(null);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [showFeatureReq, setShowFeatureReq] = useState(false);
+
+  // Check for secret admin path
+  useEffect(() => {
+    if (window.location.pathname === "/ph-console") {
+      setShowAdmin(true);
+    }
+  }, []);
+
+  // Auth state
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      if (_event === "SIGNED_IN" && s?.user) {
+        // Log login event silently
+        supabase.from("login_events").insert({
+          user_id: s.user.id,
+          email: s.user.email,
+        }).then(() => {});
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Loading state
+  if (session === undefined) {
+    return (
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        height: "100%", background: "var(--bg)", color: "var(--sec)"
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <img src="/icon.svg" alt="Pin High" style={{ width: 72, height: 72, marginBottom: 16 }} />
+          <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADING…</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Not signed in
+  if (!session) {
+    return <AuthScreen onAuth={() => {}} />;
+  }
+
+  const userEmail = session.user.email ?? "";
+  const isOwner = userEmail === OWNER_EMAIL;
 
   function handleRoundStart(r: Round) {
     setRound(r);
@@ -52,6 +108,17 @@ export default function App() {
   function handleRoundChange(r: Round) {
     setRound(r);
     saveRound(r);
+    // Sync to Supabase in background
+    supabase.from("rounds").upsert({
+      id: r.id,
+      user_id: session!.user.id,
+      course_name: r.courseName,
+      tee_name: r.teeName,
+      date: r.date,
+      player_name: r.playerName ?? null,
+      holes: r.holes,
+      updated_at: new Date().toISOString(),
+    }).then(() => {});
   }
 
   function handleClubsChange(c: Club[]) {
@@ -70,30 +137,74 @@ export default function App() {
     setGuidedHoleIdx(null);
   }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+  }
+
   const navItems: { id: AppView; label: string; icon: string }[] = [
     { id: "scorecard", label: "Scorecard", icon: "⛳" },
     { id: "insight", label: "Insight", icon: "📊" },
     { id: "clubs", label: "Clubs", icon: "🏌️" },
     { id: "reflection", label: "Reflect", icon: "✍️" },
-    { id: "setup", label: "Settings", icon: "⚙️" },
+    { id: "setup", label: "More", icon: "☰" },
   ];
-
-  function handleNavClick(id: AppView) {
-    if (id === "setup") {
-      alert("Coming soon");
-      return;
-    }
-    setView(id);
-  }
 
   const showGuidedEntry = guidedHoleIdx !== null && round !== null;
 
   return (
     <div className="app">
+      {/* Admin Dashboard (owner only, hidden route) */}
+      {showAdmin && isOwner && (
+        <AdminDashboard onClose={() => {
+          setShowAdmin(false);
+          window.history.pushState({}, "", "/");
+        }} />
+      )}
+
+      {/* Feature Request Modal */}
+      {showFeatureReq && (
+        <FeatureRequestModal
+          userId={session.user.id}
+          email={userEmail}
+          onClose={() => setShowFeatureReq(false)}
+        />
+      )}
+
       {/* Main content */}
       <div style={{ flex: 1, overflowY: "auto" }}>
         {view === "setup" && (
-          <CourseSetup onStart={handleRoundStart} />
+          <div>
+            <CourseSetup onStart={handleRoundStart} />
+            {/* Menu Footer */}
+            <div style={{ padding: "0 16px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
+              <button
+                className="ghost-btn"
+                style={{ width: "100%", textAlign: "left", padding: "12px 16px" }}
+                onClick={() => setShowFeatureReq(true)}
+              >
+                💡 Suggest a Feature
+              </button>
+              {isOwner && (
+                <button
+                  className="ghost-btn"
+                  style={{ width: "100%", textAlign: "left", padding: "12px 16px" }}
+                  onClick={() => {
+                    window.history.pushState({}, "", "/ph-console");
+                    setShowAdmin(true);
+                  }}
+                >
+                  ⚙️ Dashboard
+                </button>
+              )}
+              <button
+                className="ghost-btn"
+                style={{ width: "100%", textAlign: "left", padding: "12px 16px", color: "var(--muted)" }}
+                onClick={handleSignOut}
+              >
+                Sign Out · {userEmail}
+              </button>
+            </div>
+          </div>
         )}
 
         {view === "scorecard" && round && (
@@ -153,7 +264,7 @@ export default function App() {
           <button
             key={item.id}
             className={`bnav-item ${view === item.id ? "bnav-active" : ""}`}
-            onClick={() => handleNavClick(item.id)}
+            onClick={() => setView(item.id)}
           >
             <span className="bnav-icon">{item.icon}</span>
             <span className="bnav-label">{item.label}</span>
