@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import type { Round, Club, AppView, Hole } from "./types";
 import { loadClubs, saveClubs, saveRound } from "./utils/localStorageStore";
@@ -15,14 +15,14 @@ import GuidedHoleEntry from "./components/GuidedHoleEntry";
 
 function makeDefaultClubs(): Club[] {
   const specs = [
-    { name: "Driver", spec: "Titleist GT2 9°" },
+    { name: "Driver", spec: "Titleist GT2 9Â°" },
     { name: "3 Wood", spec: "TaylorMade Qi35" },
     { name: "7 Wood", spec: "TaylorMade Qi10" },
     { name: "4 Iron", spec: "TaylorMade P790" },
-    { name: "5–9 Iron / PW", spec: "TaylorMade P770" },
-    { name: "50° GW", spec: "TaylorMade MG4" },
-    { name: "54° SW", spec: "Vokey SM11 M Grind" },
-    { name: "58° LW", spec: "Vokey SM11 T Grind" },
+    { name: "5â9 Iron / PW", spec: "TaylorMade P770" },
+    { name: "50Â° GW", spec: "TaylorMade MG4" },
+    { name: "54Â° SW", spec: "Vokey SM11 M Grind" },
+    { name: "58Â° LW", spec: "Vokey SM11 T Grind" },
     { name: "Putter", spec: "Scotty Cameron Fastback 2.5" },
   ];
   return specs.map((s, i) => ({
@@ -51,6 +51,9 @@ export default function App() {
   const [guidedHoleIdx, setGuidedHoleIdx] = useState<number | null>(null);
   const [showAdmin, setShowAdmin] = useState(() => window.location.pathname === "/ph-console");
   const [showFeatureReq, setShowFeatureReq] = useState(false);
+  const [staleRoundBanner, setStaleRoundBanner] = useState(false);
+  const [showReflectionPrompt, setShowReflectionPrompt] = useState(false);
+  const lastRoundUpdateRef = useRef<number>(Date.now());
 
   // Auth state
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function App() {
       }}>
         <div style={{ textAlign: "center" }}>
           <img src="/icon-192.png" alt="Pin High" style={{ width: 72, height: 72, marginBottom: 16, borderRadius: 18 }} />
-          <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADING…</div>
+          <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADINGâ¦</div>
         </div>
       </div>
     );
@@ -116,11 +119,16 @@ export default function App() {
   function handleRoundStart(r: Round) {
     setRound(r);
     setView("scorecard");
+    lastRoundUpdateRef.current = Date.now();
+    setStaleRoundBanner(false);
+    setShowReflectionPrompt(false);
   }
 
   function handleRoundChange(r: Round) {
     setRound(r);
     saveRound(r);
+    lastRoundUpdateRef.current = Date.now();
+    setStaleRoundBanner(false);
     // Sync to Supabase in background
     supabase.from("rounds").upsert({
       id: r.id,
@@ -154,12 +162,27 @@ export default function App() {
     await supabase.auth.signOut();
   }
 
+  // Stale round reminder: show banner if active round hasn't been updated in 15 minutes
+  useEffect(() => {
+    const CHECK_INTERVAL = 60_000; // check every 60s
+    const STALE_THRESHOLD = 15 * 60_000; // 15 minutes
+    const id = setInterval(() => {
+      if (round && view === "scorecard") {
+        const idle = Date.now() - lastRoundUpdateRef.current;
+        if (idle >= STALE_THRESHOLD) {
+          setStaleRoundBanner(true);
+        }
+      }
+    }, CHECK_INTERVAL);
+    return () => clearInterval(id);
+  }, [round, view]);
+
   const navItems: { id: AppView; label: string; icon: string }[] = [
-    { id: "scorecard", label: "Scorecard", icon: "⛳" },
-    { id: "insight", label: "Insight", icon: "📊" },
-    { id: "clubs", label: "Clubs", icon: "🏌️" },
-    { id: "reflection", label: "Reflect", icon: "✍️" },
-    { id: "setup", label: "More", icon: "☰" },
+    { id: "scorecard", label: "Scorecard", icon: "â³" },
+    { id: "insight", label: "Insight", icon: "ð" },
+    { id: "clubs", label: "Clubs", icon: "ðï¸" },
+    { id: "reflection", label: "Reflect", icon: "âï¸" },
+    { id: "setup", label: "More", icon: "â°" },
   ];
 
   const showGuidedEntry = guidedHoleIdx !== null && round !== null;
@@ -195,7 +218,7 @@ export default function App() {
                 style={{ width: "100%", textAlign: "left", padding: "12px 16px" }}
                 onClick={() => setShowFeatureReq(true)}
               >
-                💡 Suggest a Feature
+                ð¡ Suggest a Feature
               </button>
               {isOwner && (
                 <button
@@ -206,7 +229,7 @@ export default function App() {
                     setShowAdmin(true);
                   }}
                 >
-                  ⚙️ Dashboard
+                  âï¸ Dashboard
                 </button>
               )}
               <button
@@ -214,9 +237,28 @@ export default function App() {
                 style={{ width: "100%", textAlign: "left", padding: "12px 16px", color: "var(--muted)" }}
                 onClick={handleSignOut}
               >
-                Sign Out · {userEmail}
+                Sign Out Â· {userEmail}
               </button>
             </div>
+          </div>
+        )}
+
+        {view === "scorecard" && staleRoundBanner && round && (
+          <div style={{
+            background: "#c47a2a22", border: "1px solid var(--copper)", borderRadius: 10,
+            padding: "12px 16px", margin: "12px 16px 0", display: "flex", alignItems: "center",
+            gap: 12, position: "relative",
+          }}>
+            <span style={{ fontSize: 20 }}>â±ï¸</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ color: "var(--copper)", fontWeight: 700, fontSize: 13 }}>Still playing?</div>
+              <div style={{ color: "var(--sec)", fontSize: 12 }}>No score updates in 15+ minutes. Tap a hole to continue.</div>
+            </div>
+            <button
+              onClick={() => setStaleRoundBanner(false)}
+              style={{ background: "none", border: "none", color: "var(--sec)", cursor: "pointer", fontSize: 18, padding: 4 }}
+              aria-label="Dismiss"
+            >â</button>
           </div>
         )}
 
@@ -224,7 +266,10 @@ export default function App() {
           <Scorecard
             round={round}
             onRoundChange={handleRoundChange}
-            onViewInsight={() => setView("insight")}
+            onViewInsight={() => {
+              setView("insight");
+              setShowReflectionPrompt(true);
+            }}
             onHoleClick={handleHoleClick}
           />
         )}
@@ -237,12 +282,38 @@ export default function App() {
         )}
 
         {view === "insight" && round && (
-          <RoundInsightView
-            round={round}
-            clubs={clubs}
-            onReflect={() => setView("reflection")}
-            onBack={() => setView("scorecard")}
-          />
+          <>
+            <RoundInsightView
+              round={round}
+              clubs={clubs}
+              onReflect={() => { setView("reflection"); setShowReflectionPrompt(false); }}
+              onBack={() => setView("scorecard")}
+            />
+            {showReflectionPrompt && (
+              <div style={{
+                position: "fixed", bottom: 80, left: "50%", transform: "translateX(-50%)",
+                background: "var(--copper)", color: "#fff", borderRadius: 12, padding: "14px 20px",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.5)", zIndex: 200, maxWidth: 340, width: "90%",
+                display: "flex", alignItems: "center", gap: 12,
+              }}>
+                <span style={{ fontSize: 20 }}>âï¸</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>Log your reflections?</div>
+                  <div style={{ fontSize: 12, opacity: 0.9, marginTop: 2 }}>Capture what worked and what to improve.</div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <button
+                    onClick={() => { setView("reflection"); setShowReflectionPrompt(false); }}
+                    style={{ background: "#fff", color: "var(--copper)", border: "none", borderRadius: 6, padding: "6px 12px", fontWeight: 700, cursor: "pointer", fontSize: 13 }}
+                  >Yes</button>
+                  <button
+                    onClick={() => setShowReflectionPrompt(false)}
+                    style={{ background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 6, padding: "5px 12px", cursor: "pointer", fontSize: 12 }}
+                  >Skip</button>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {view === "insight" && !round && (
