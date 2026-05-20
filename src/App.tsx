@@ -12,17 +12,18 @@ import RoundInsightView from "./components/RoundInsightView";
 import PostRoundReflection from "./components/PostRoundReflection";
 import ClubPerformanceMap from "./components/ClubPerformanceMap";
 import GuidedHoleEntry from "./components/GuidedHoleEntry";
+import ImportView from "./components/ImportView";
 
 function makeDefaultClubs(): Club[] {
   const specs = [
-    { name: "Driver", spec: "Titleist GT2 9Â°" },
+    { name: "Driver", spec: "Titleist GT2 9deg" },
     { name: "3 Wood", spec: "TaylorMade Qi35" },
     { name: "7 Wood", spec: "TaylorMade Qi10" },
     { name: "4 Iron", spec: "TaylorMade P790" },
-    { name: "5â9 Iron / PW", spec: "TaylorMade P770" },
-    { name: "50Â° GW", spec: "TaylorMade MG4" },
-    { name: "54Â° SW", spec: "Vokey SM11 M Grind" },
-    { name: "58Â° LW", spec: "Vokey SM11 T Grind" },
+    { name: "5Ã¢ÂÂ9 Iron / PW", spec: "TaylorMade P770" },
+    { name: "50deg GW", spec: "TaylorMade MG4" },
+    { name: "54deg SW", spec: "Vokey SM11 M Grind" },
+    { name: "58deg LW", spec: "Vokey SM11 T Grind" },
     { name: "Putter", spec: "Scotty Cameron Fastback 2.5" },
   ];
   return specs.map((s, i) => ({
@@ -117,7 +118,7 @@ export default function App() {
       }}>
         <div style={{ textAlign: "center" }}>
           <img src="/icon-192.png" alt="Pin High" style={{ width: 72, height: 72, marginBottom: 16, borderRadius: 18 }} />
-          <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADINGâ¦</div>
+          <div style={{ fontSize: 12, letterSpacing: 1 }}>LOADINGÃ¢ÂÂ¦</div>
         </div>
       </div>
     );
@@ -160,6 +161,44 @@ export default function App() {
   function handleClubsChange(c: Club[]) {
     setClubs(c);
     saveClubs(c);
+    // Sync clubs to Supabase in background
+    supabase.from("clubs").upsert(
+      c.map(club => ({
+        user_id: session?.user?.id,
+        club_id: club.id,
+        name: club.name,
+        spec: club.spec,
+        status: club.status,
+        main_miss: club.mainMiss,
+        approach_dist: club.approachDist !== "" ? club.approachDist : null,
+        carry_dist: club.carryDist !== "" ? club.carryDist : null,
+        total_dist: club.totalDist !== "" ? club.totalDist : null,
+        stock_dist: club.stockDist !== "" ? club.stockDist : null,
+        partial_dist: club.partialDist !== "" ? club.partialDist : null,
+        notes: club.notes,
+      })),
+      { onConflict: "user_id,club_id", ignoreDuplicates: false }
+    ).then(() => {}); // fire-and-forget
+  }
+
+  function handleImportComplete(importedRound: Round) {
+    // Save to localStorage
+    saveRound(importedRound);
+    // Sync to Supabase
+    supabase.from("rounds").upsert({
+      id: importedRound.id,
+      user_id: session?.user?.id,
+      course_name: importedRound.courseName,
+      tee_name: importedRound.teeName,
+      date: importedRound.date,
+      player_name: importedRound.playerName,
+      holes: importedRound.holes,
+      imported: true,
+      updated_at: new Date().toISOString(),
+    }).then(() => {});
+    // Switch to scorecard view with the imported round
+    setRound(importedRound);
+    setView("insight");
   }
 
   function handleHoleClick(idx: number) {
@@ -178,11 +217,11 @@ export default function App() {
   }
 
   const navItems: { id: AppView; label: string; icon: string }[] = [
-    { id: "scorecard", label: "Scorecard", icon: "â³" },
-    { id: "insight", label: "Insight", icon: "ð" },
-    { id: "clubs", label: "Clubs", icon: "ðï¸" },
-    { id: "reflection", label: "Reflect", icon: "âï¸" },
-    { id: "setup", label: "More", icon: "â°" },
+    { id: "scorecard", label: "Scorecard", icon: "Ã¢ÂÂ³" },
+    { id: "insight", label: "Insight", icon: "Ã°ÂÂÂ" },
+    { id: "clubs", label: "Clubs", icon: "Ã°ÂÂÂÃ¯Â¸Â" },
+    { id: "reflection", label: "Reflect", icon: "Ã¢ÂÂÃ¯Â¸Â" },
+    { id: "setup", label: "More", icon: "Ã¢ÂÂ°" },
   ];
 
   const showGuidedEntry = guidedHoleIdx !== null && round !== null;
@@ -216,9 +255,16 @@ export default function App() {
               <button
                 className="ghost-btn"
                 style={{ width: "100%", textAlign: "left", padding: "12px 16px" }}
+                onClick={() => setView("import")}
+              >
+                &#128513; Import from 18Birdies
+              </button>
+              <button
+                className="ghost-btn"
+                style={{ width: "100%", textAlign: "left", padding: "12px 16px" }}
                 onClick={() => setShowFeatureReq(true)}
               >
-                ð¡ Suggest a Feature
+                Ã°ÂÂÂ¡ Suggest a Feature
               </button>
               {isOwner && (
                 <button
@@ -229,7 +275,7 @@ export default function App() {
                     setShowAdmin(true);
                   }}
                 >
-                  âï¸ Dashboard
+                  Ã¢ÂÂÃ¯Â¸Â Dashboard
                 </button>
               )}
               <button
@@ -237,7 +283,7 @@ export default function App() {
                 style={{ width: "100%", textAlign: "left", padding: "12px 16px", color: "var(--muted)" }}
                 onClick={handleSignOut}
               >
-                Sign Out Â· {userEmail}
+                Sign Out ÃÂ· {userEmail}
               </button>
             </div>
           </div>
@@ -249,7 +295,7 @@ export default function App() {
             padding: "12px 16px", margin: "12px 16px 0", display: "flex", alignItems: "center",
             gap: 12, position: "relative",
           }}>
-            <span style={{ fontSize: 20 }}>â±ï¸</span>
+            <span style={{ fontSize: 20 }}>Ã¢ÂÂ±Ã¯Â¸Â</span>
             <div style={{ flex: 1 }}>
               <div style={{ color: "var(--copper)", fontWeight: 700, fontSize: 13 }}>Still playing?</div>
               <div style={{ color: "var(--sec)", fontSize: 12 }}>No score updates in 15+ minutes. Tap a hole to continue.</div>
@@ -258,7 +304,7 @@ export default function App() {
               onClick={() => setStaleRoundBanner(false)}
               style={{ background: "none", border: "none", color: "var(--sec)", cursor: "pointer", fontSize: 18, padding: 4 }}
               aria-label="Dismiss"
-            >â</button>
+            >Ã¢ÂÂ</button>
           </div>
         )}
 
@@ -296,7 +342,7 @@ export default function App() {
                 boxShadow: "0 4px 20px rgba(0,0,0,0.5)", zIndex: 200, maxWidth: 340, width: "90%",
                 display: "flex", alignItems: "center", gap: 12,
               }}>
-                <span style={{ fontSize: 20 }}>âï¸</span>
+                <span style={{ fontSize: 20 }}>Ã¢ÂÂÃ¯Â¸Â</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>Log your reflections?</div>
                   <div style={{ fontSize: 12, opacity: 0.9, marginTop: 2 }}>Capture what worked and what to improve.</div>
@@ -339,6 +385,13 @@ export default function App() {
 
         {view === "clubs" && (
           <ClubPerformanceMap clubs={clubs} onClubsChange={handleClubsChange} />
+        )}
+
+        {view === "import" && (
+          <ImportView
+            onImportComplete={handleImportComplete}
+            onClose={() => setView("setup")}
+          />
         )}
       </div>
 
