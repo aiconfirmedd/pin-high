@@ -1,8 +1,8 @@
 /* ============================================================
-   GOLF SCORECARD APP â Global Styles
+   GOLF SCORECARD APP Ã¢ÂÂ Global Styles
    ============================================================ */
 
-/* Design tokens â Pin High Premium Metallic */
+/* Design tokens Ã¢ÂÂ Pin High Premium Metallic */
 :root {
   --bg:          #18181A;
   --card:        #222224;
@@ -155,6 +155,7 @@ input, textarea {
 }
 
 .cta-btn {
+  min-height: 52px;
   background: linear-gradient(135deg, #D48B3A 0%, #C4762A 55%, #8B4E1A 100%);
   color: var(--white);
   border: none;
@@ -436,8 +437,8 @@ input, textarea {
   outline: 3px solid var(--copper-shine);
   outline-offset: 2px;
   box-shadow: 0 0 0 6px rgba(196, 118, 42, 0.3);
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: 800;
   text-shadow: 0 0 6px rgba(224, 165, 80, 0.5);
 }
@@ -452,8 +453,8 @@ input, textarea {
   border: 2px solid var(--copper-shine);
   outline: 3px solid var(--copper-shine);
   outline-offset: 2px;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: 800;
   text-shadow: 0 0 6px rgba(224, 165, 80, 0.4);
 }
@@ -466,8 +467,8 @@ input, textarea {
   color: var(--copper-lt);
   border-radius: 50%;
   border: 2px solid var(--copper-lt);
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: 700;
 }
 
@@ -477,8 +478,8 @@ input, textarea {
   align-items: center;
   justify-content: center;
   color: var(--white);
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* Bogey: single grey square */
@@ -489,8 +490,8 @@ input, textarea {
   color: var(--sec);
   border: 2px solid #666666;
   border-radius: 3px;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* Double bogey: double grey square */
@@ -503,8 +504,8 @@ input, textarea {
   outline: 3px solid #666666;
   outline-offset: 2px;
   border-radius: 3px;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* Triple+: filled dark square */
@@ -515,8 +516,8 @@ input, textarea {
   color: var(--sec);
   background: #444444;
   border-radius: 3px;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 44px;
+  min-height: 44px;
   font-weight: 600;
 }
 
@@ -597,7 +598,8 @@ input, textarea {
   background: var(--surface2);
   border: 1px solid var(--grid);
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 12px 14px;
+  min-height: 48px;
   color: var(--white);
   font-size: 15px;
   width: 100%;
@@ -607,6 +609,17 @@ input, textarea {
 
 .form-input:focus {
   border-color: var(--orange);
+}
+
+.form-input-error {
+  border-color: #ff5555 !important;
+  background: rgba(255, 85, 85, 0.05);
+}
+
+.form-input-error:focus {
+  border-color: #ff5555 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 85, 85, 0.15);
 }
 
 .form-row {
@@ -1118,8 +1131,8 @@ input, textarea {
 }
 
 .action-icon {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
@@ -1142,7 +1155,7 @@ input, textarea {
 }
 
 
-/* ââ Auth Hero & Premium Landing âââââââââââââââââââââââââ */
+/* Ã¢ÂÂÃ¢ÂÂ Auth Hero & Premium Landing Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 .auth-card--hero {
   max-width: 420px;
   padding: 0;
@@ -1308,9 +1321,142 @@ input, textarea {
   min-height: 48px;
 }
 
+/* ============================================================
+   Responsive Breakpoints â Mobile-first multi-breakpoint system
+   ============================================================ */
+
+/* Small phones: < 375px */
+@media (max-width: 374px) {
+  :root {
+    font-size: 13px;
+  }
+  .topbar-title {
+    font-size: 14px;
+  }
+  .scorecard-table {
+    font-size: 11px;
+  }
+  .scorecard-table th {
+    font-size: 8px;
+    padding: 4px 2px;
+  }
+  .scorecard-table td {
+    padding: 4px 1px;
+  }
+  .showcase-card {
+    padding: 14px 12px;
+  }
+  .form-input {
+    font-size: 15px;
+    min-height: 48px;
+  }
+}
+
+/* Standard mobile: < 430px */
 @media (max-width: 430px) {
   .setup-grid-two {
     grid-template-columns: 1fr;
+  }
+  .setup-grid-three {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dashboard-preview {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .score-entry-controls {
+    gap: 6px;
+  }
+  .sym-albatross,
+  .sym-eagle,
+  .sym-birdie,
+  .sym-par,
+  .sym-bogey,
+  .sym-double,
+  .sym-triple {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 15px;
+  }
+  .hole-entry-row {
+    min-height: 52px;
+  }
+  .hole-setup-grid {
+    grid-template-columns: 40px 1fr 72px 72px;
+    gap: 6px;
+  }
+  .insight-card {
+    padding: 14px 12px;
+  }
+  .tab-btn {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+}
+
+/* Mid-range and landscape phones: 431px - 640px */
+@media (min-width: 431px) and (max-width: 640px) {
+  .setup-grid-two {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .scorecard-table {
+    font-size: 13px;
+  }
+  .showcase-card {
+    padding: 18px 16px;
+  }
+}
+
+/* Tablet portrait: 641px - 768px */
+@media (min-width: 641px) and (max-width: 768px) {
+  .app-content {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .dashboard-preview {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .setup-grid-two {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .setup-grid-three {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .scorecard-table th {
+    font-size: 10px;
+    padding: 8px 5px;
+  }
+  .scorecard-table td {
+    padding: 7px 4px;
+  }
+}
+
+/* Tablet landscape and small desktop: 769px+ */
+@media (min-width: 769px) {
+  .app-content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .scorecard-table th {
+    font-size: 11px;
+    padding: 8px 6px;
+  }
+  .scorecard-table td {
+    padding: 8px 5px;
+  }
+  .showcase-card {
+    padding: 22px 20px;
+  }
+  .dashboard-preview {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .form-input {
+    font-size: 15px;
   }
 }
 
@@ -1716,4 +1862,136 @@ input, textarea {
   border-top-color: #4A4A4C;
   box-shadow: 0 8px 40px rgba(0,0,0,0.6);
   overflow: hidden;
+}
+
+/* ============================================================
+   CourseSetup Improvements â Tap targets and layout
+   ============================================================ */
+
+/* Preset checkbox - larger tap target wrapper */
+.preset-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.preset-toggle-row input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  accent-color: var(--copper);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.preset-toggle-label {
+  color: var(--sec);
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Error message */
+.setup-error {
+  color: #ff5555;
+  background: rgba(255, 85, 85, 0.1);
+  border: 1px solid rgba(255, 85, 85, 0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 14px;
+  border-left: 3px solid #ff5555;
+}
+
+/* Setup header back button alignment */
+.setup-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.setup-header-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: rgba(44,44,46,0.72);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--sec);
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.setup-header-back:hover {
+  background: rgba(60,60,62,0.9);
+  color: var(--white);
+}
+
+/* Section divider for CourseSetup */
+.setup-section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--grid), transparent);
+  margin: 18px 0;
+}
+
+/* Photo import button */
+.photo-import-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  width: 100%;
+  border: 1.5px dashed rgba(196, 118, 42, 0.4);
+  border-radius: 14px;
+  background: rgba(196, 118, 42, 0.06);
+  color: var(--copper-lt);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transition: all 0.18s;
+}
+
+.photo-import-btn:hover {
+  background: rgba(196, 118, 42, 0.12);
+  border-color: rgba(196, 118, 42, 0.6);
+  color: var(--copper-shine);
+}
+
+/* Hole entry row enhancements */
+.hole-entry-row:active {
+  background: rgba(196, 118, 42, 0.1);
+  transform: scale(0.99);
+}
+
+/* OCR confidence badge */
+.ocr-confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.ocr-confidence-badge.high {
+  background: rgba(45, 138, 53, 0.18);
+  color: var(--green-lt);
+  border: 1px solid rgba(45, 138, 53, 0.3);
+}
+
+.ocr-confidence-badge.low {
+  background: rgba(255, 165, 0, 0.12);
+  color: #FFA500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
 }
