@@ -3,7 +3,7 @@ import Tesseract from "tesseract.js";
 import { parseOcrText } from "../utils/ocrParser";
 
 interface Props {
-  onOcrComplete: (result: { yards: (number | "")[]; pars: (number | "")[]; confidence: number[] }) => void;
+  onOcrComplete: (result: { yards: (number | "")[]; pars: (number | "")[]; confidence: number[]; courseName?: string; courseNameConfidence?: number }) => void;
   onClose: () => void;
 }
 
@@ -50,38 +50,67 @@ export default function PhotoImporter({ onOcrComplete, onClose }: Props) {
         onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <span style={{ fontWeight: 700, fontSize: 16, color: "var(--white)" }}>Import Scorecard Photo</span>
-          <button className="modal-close-btn" onClick={onClose}>✕</button>
+          <button className="icon-btn" onClick={onClose} aria-label="Close">â</button>
         </div>
-        <div className="card-body" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <label className="cta-btn" style={{ cursor: "pointer", textAlign: "center" }}>
-            Choose Image
-            <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
+
+        <div style={{ padding: "16px 16px 0" }}>
+          <p style={{ color: "var(--sec)", fontSize: 13, marginBottom: 12 }}>
+            Take a photo of your scorecard to auto-fill yardages, pars, and course name.
+          </p>
+
+          <label style={{
+            display: "block",
+            border: "2px dashed var(--border)",
+            borderRadius: 10,
+            padding: "20px 16px",
+            textAlign: "center",
+            cursor: "pointer",
+            color: "var(--sec)",
+            fontSize: 14,
+            marginBottom: 12,
+          }}>
+            {imageUrl ? (
+              <img src={imageUrl} alt="Scorecard preview" style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6 }} />
+            ) : (
+              <>
+                <div style={{ fontSize: 28, marginBottom: 6 }}>ð·</div>
+                <div>Tap to select or take a photo</div>
+              </>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              style={{ display: "none" }}
+              onChange={handleFile}
+            />
           </label>
 
-          {imageUrl && (
-            <img src={imageUrl} alt="Scorecard preview"
-              style={{ width: "100%", borderRadius: 8, border: "1px solid var(--grid)" }} />
+          {error && (
+            <div style={{ color: "#e05", fontSize: 13, marginBottom: 10 }}>{error}</div>
           )}
 
           {running && (
-            <div>
-              <div style={{ color: "var(--sec)", fontSize: 13, marginBottom: 6 }}>
-                Recognizing text... {progress}%
-              </div>
-              <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${progress}%` }} />
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ color: "var(--sec)", fontSize: 12, marginBottom: 4 }}>Scanning... {progress}%</div>
+              <div style={{ height: 4, background: "var(--border)", borderRadius: 2 }}>
+                <div style={{ height: "100%", width: `${progress}%`, background: "var(--copper)", borderRadius: 2, transition: "width 0.2s" }} />
               </div>
             </div>
           )}
+        </div>
 
-          {error && (
-            <div style={{ color: "#ff4444", background: "#2a1111", borderRadius: 6, padding: "10px 14px", fontSize: 14 }}>
-              {error}
-            </div>
-          )}
-
-          <button className="cta-btn" disabled={!imageUrl || running} onClick={runOcr}>
-            {running ? "Running OCR..." : "Run OCR"}
+        <div style={{ padding: "12px 16px 20px", display: "flex", gap: 10 }}>
+          <button
+            className="cta-btn"
+            style={{ flex: 1 }}
+            disabled={!imageUrl || running}
+            onClick={runOcr}
+          >
+            {running ? "Scanningâ¦" : "Scan Scorecard"}
+          </button>
+          <button className="ghost-btn" onClick={onClose} style={{ minWidth: 80 }}>
+            Cancel
           </button>
         </div>
       </div>
