@@ -65,7 +65,7 @@ export function parseOcrText(rawText: string): {
   // Heuristics: line is mostly letters/spaces, not all-caps numbers, length 4â60,
   // appears before the first yardage row, doesn't match known scorecard labels.
   const SKIP_PATTERNS = /^(hole|yards|yardage|par|handicap|hcp|stroke|score|out|in|total|date|player|name|tee|front|back|men|women|red|white|blue|gold|black|green|platinum)$/i;
-  const NUMBER_HEAVY = /^[ds-/.]+$/;
+  const NUMBER_HEAVY = /^[\d\s./-]+$/;
 
   let courseName: string | undefined;
   let courseNameConfidence = 0;

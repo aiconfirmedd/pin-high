@@ -53,7 +53,7 @@ export default function App() {
   const [showFeatureReq, setShowFeatureReq] = useState(false);
   const [staleRoundBanner, setStaleRoundBanner] = useState(false);
   const [showReflectionPrompt, setShowReflectionPrompt] = useState(false);
-  const lastRoundUpdateRef = useRef<number>(Date.now());
+  const lastRoundUpdateRef = useRef<number>(0);
 
   // Auth state
   useEffect(() => {
@@ -92,6 +92,21 @@ export default function App() {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Stale round reminder: show banner if active round hasn't been updated in 15 minutes
+  useEffect(() => {
+    const CHECK_INTERVAL = 60_000; // check every 60s
+    const STALE_THRESHOLD = 15 * 60_000; // 15 minutes
+    const id = setInterval(() => {
+      if (round && view === "scorecard") {
+        const idle = Date.now() - lastRoundUpdateRef.current;
+        if (idle >= STALE_THRESHOLD) {
+          setStaleRoundBanner(true);
+        }
+      }
+    }, CHECK_INTERVAL);
+    return () => clearInterval(id);
+  }, [round, view]);
 
   // Loading state
   if (session === undefined) {
@@ -161,21 +176,6 @@ export default function App() {
   async function handleSignOut() {
     await supabase.auth.signOut();
   }
-
-  // Stale round reminder: show banner if active round hasn't been updated in 15 minutes
-  useEffect(() => {
-    const CHECK_INTERVAL = 60_000; // check every 60s
-    const STALE_THRESHOLD = 15 * 60_000; // 15 minutes
-    const id = setInterval(() => {
-      if (round && view === "scorecard") {
-        const idle = Date.now() - lastRoundUpdateRef.current;
-        if (idle >= STALE_THRESHOLD) {
-          setStaleRoundBanner(true);
-        }
-      }
-    }, CHECK_INTERVAL);
-    return () => clearInterval(id);
-  }, [round, view]);
 
   const navItems: { id: AppView; label: string; icon: string }[] = [
     { id: "scorecard", label: "Scorecard", icon: "â³" },
