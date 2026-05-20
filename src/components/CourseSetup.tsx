@@ -39,6 +39,7 @@ export default function CourseSetup({ onStart }: Props) {
   const [draftYards, setDraftYards] = React.useState<number | "">("");
   const [draftPar, setDraftPar] = React.useState<number | "">("");
   const [error, setError] = React.useState("");
+  const [courseNameTouched, setCourseNameTouched] = React.useState(false);
 
   function loadPreset(preset: CoursePreset) {
     setCourseName(preset.courseName);
@@ -55,9 +56,13 @@ export default function CourseSetup({ onStart }: Props) {
     setShowPresets(false);
   }
 
-  function handleOcrComplete(result: { yards: (number | "")[]; pars: (number | "")[]; confidence: number[] }) {
+  function handleOcrComplete(result: { yards: (number | "")[]; pars: (number | "")[]; confidence: number[]; courseName?: string }) {
     setShowPhoto(false);
     setOcrResult(result);
+    // Auto-fill course name if OCR detected one with high confidence
+    if (result.courseName && result.courseName.trim() && !courseName.trim()) {
+      setCourseName(result.courseName.trim());
+    }
   }
 
   function applyOcr(yards: (number | "")[], pars: (number | "")[]) {
@@ -90,7 +95,8 @@ export default function CourseSetup({ onStart }: Props) {
 
   function handleStart() {
     if (!courseName.trim()) {
-      setError("Course name is required");
+      setCourseNameTouched(true);
+      setError("Course name is required to start your round.");
       return;
     }
     setError("");
@@ -151,14 +157,14 @@ export default function CourseSetup({ onStart }: Props) {
 
       <div className="action-rail" aria-label="Round setup shortcuts">
         <button className="action-card" onClick={() => setShowPresets(true)}>
-          <span className="action-icon">▣</span>
+          <span className="action-icon">â£</span>
           <span>
             <strong>Load Preset</strong>
             <small>Start from a saved course</small>
           </span>
         </button>
         <button className="action-card" onClick={() => setShowPhoto(true)}>
-          <span className="action-icon">◎</span>
+          <span className="action-icon">â</span>
           <span>
             <strong>Photo Import</strong>
             <small>Read yards and par from a card</small>
@@ -192,8 +198,19 @@ export default function CourseSetup({ onStart }: Props) {
         <div className="card-body">
           <div className="form-group">
             <label className="form-label">Course Name *</label>
-            <input className="form-input" value={courseName} onChange={e => setCourseName(e.target.value)}
-              placeholder="e.g. Pebble Beach" />
+            <input
+              className={`form-input ${courseNameTouched && !courseName.trim() ? "form-input-error" : ""}`}
+              value={courseName}
+              onChange={e => { setCourseName(e.target.value); if (e.target.value.trim()) setError(""); }}
+              onBlur={() => setCourseNameTouched(true)}
+              placeholder="e.g. Pebble Beach"
+              autoComplete="off"
+            />
+            {courseNameTouched && !courseName.trim() && (
+              <span style={{ color: "#ff5555", fontSize: 12, marginTop: 4, display: "block" }}>
+                Required
+              </span>
+            )}
           </div>
           <div className="setup-grid setup-grid-two">
             <div className="form-group">
@@ -203,7 +220,7 @@ export default function CourseSetup({ onStart }: Props) {
             </div>
             <div className="form-group">
               <label className="form-label">Distance (yds)</label>
-              <input className="form-input" type="number" value={teeDistance === "" ? "" : teeDistance}
+              <input className="form-input" type="number" inputMode="numeric" value={teeDistance === "" ? "" : teeDistance}
                 onChange={e => setTeeDistance(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
                 placeholder="e.g. 6800" />
             </div>
@@ -226,7 +243,7 @@ export default function CourseSetup({ onStart }: Props) {
       <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-header">Hole Information</div>
         <div className="card-body">
-          {["Front 9 (1–9)", "Back 9 (10–18)"].map((label, sectionIdx) => (
+          {["Front 9 (1â9)", "Back 9 (10â18)"].map((label, sectionIdx) => (
             <div key={sectionIdx} className="hole-panel">
               <div className="hole-panel-title">{label}</div>
               <div className="hole-entry-head">
@@ -237,7 +254,8 @@ export default function CourseSetup({ onStart }: Props) {
               {Array.from({ length: 9 }, (_, i) => {
                 const idx = sectionIdx * 9 + i;
                 return (
-                  <button key={idx} className="hole-entry-row" onClick={() => openHoleEditor(idx)}>
+                  <button key={idx} className="hole-entry-row" onClick={() => openHoleEditor(idx)}
+                    aria-label={`Edit hole ${idx + 1}`}>
                     <span className="hole-number">{idx + 1}</span>
                     <span className="hole-value">{holes[idx].yards === "" ? "Set yards" : `${holes[idx].yards} yds`}</span>
                     <span className="hole-par">{holes[idx].par === "" ? "Set par" : `Par ${holes[idx].par}`}</span>
@@ -249,15 +267,15 @@ export default function CourseSetup({ onStart }: Props) {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+      <label className="preset-toggle-row" htmlFor="savePreset" style={{ marginBottom: 8 }}>
         <input type="checkbox" id="savePreset" checked={saveAsPreset} onChange={e => setSaveAsPreset(e.target.checked)} />
-        <label htmlFor="savePreset" style={{ color: "var(--sec)", fontSize: 14 }}>Save as preset for future rounds</label>
-      </div>
+        <span className="preset-toggle-label">Save this course as a preset for future rounds</span>
+      </label>
 
-      {error && <div style={{ color: "#ff4444", marginBottom: 12, fontSize: 14 }}>{error}</div>}
+      {error && <div className="setup-error">{error}</div>}
 
       <button className="cta-btn" style={{ width: "100%" }} onClick={handleStart}>
-        Start Round →
+        Start Round â
       </button>
 
       {showPresets && <SavedPresets onLoad={loadPreset} onClose={() => setShowPresets(false)} />}
