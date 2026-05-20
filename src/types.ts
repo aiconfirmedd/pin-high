@@ -68,4 +68,5 @@ export type AppView =
   | "scorecard"
   | "insight"
   | "reflection"
-  | "clubs";
+  | "clubs"
+  | "import";
