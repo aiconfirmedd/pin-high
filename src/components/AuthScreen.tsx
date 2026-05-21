@@ -79,7 +79,7 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
         <div className="auth-card">
           <div className="auth-logo">
             <div className="auth-logo-frame">
-              <img src="/pin-high-logo.jpg" alt="Pin High" className="auth-icon" />
+              <img src="/icon.svg" alt="Pin High" className="auth-icon" />
             </div>
           </div>
           {forgotSent ? (
@@ -128,7 +128,7 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
         <div className="auth-hero">
           <div className="auth-logo">
             <div className="auth-logo-frame">
-              <img src="/pin-high-logo.jpg" alt="Pin High" className="auth-icon" />
+              <img src="/icon.svg" alt="Pin High" className="auth-icon" />
             </div>
             <div className="auth-wordmark">
               <div className="auth-brand">Pin High</div>

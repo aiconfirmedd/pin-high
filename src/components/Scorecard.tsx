@@ -42,6 +42,8 @@ export default function Scorecard({ round, onRoundChange, onViewInsight, onHoleC
 
   return (
     <div style={{ paddingBottom: 80 }}>
+      {/* Exportable area starts here */}
+      <div id="scorecard-export">
       {/* Top bar */}
       <div className="topbar">
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -61,7 +63,7 @@ export default function Scorecard({ round, onRoundChange, onViewInsight, onHoleC
       </div>
 
       {/* Summary strip */}
-      <div className="summary-strip" id="scorecard-export">
+      <div className="summary-strip">
         <div className="stat-block">
           <div className="stat-val">{allTotals.score || "—"}</div>
           <div className="stat-label">Score</div>
@@ -210,6 +212,7 @@ export default function Scorecard({ round, onRoundChange, onViewInsight, onHoleC
           </div>
         </div>
       )}
+      </div> {/* end scorecard-export */}
     </div>
   );
 }

@@ -10,7 +10,7 @@ interface Props {
 type Point = { x: number; y: number };
 type Stroke = Point[];
 
-export default function HandwritingPadModal({ label, hint, onDetect, onClose }: Props) {
+export default function HandwritingPadModal({ label, hint, onDetect }: Props) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [strokes, setStrokes] = React.useState<Stroke[]>([]);
   const [, setCurrentStroke] = React.useState<Stroke | null>(null);
@@ -65,7 +65,15 @@ export default function HandwritingPadModal({ label, hint, onDetect, onClose }: 
     if (detectTimerRef.current) clearTimeout(detectTimerRef.current);
     detectTimerRef.current = setTimeout(() => {
       const result = recognizeStrokes(allStrokes);
-      setDetected(result);
+      if (result) {
+        setDetected(result);
+        // Auto-advance after brief flash so user sees what was detected
+        setTimeout(() => {
+          onDetect(result);
+        }, 400);
+      } else {
+        setDetected(null);
+      }
     }, 700);
   }
 
@@ -191,64 +199,44 @@ export default function HandwritingPadModal({ label, hint, onDetect, onClose }: 
     if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  function confirm() {
-    if (detected) {
-      onDetect(detected);
-    }
-  }
-
   return (
-    <div className="modal-overlay">
-      <div style={{
-        background: "var(--card)",
-        borderRadius: 16,
-        width: "92%",
-        maxWidth: 500,
-        display: "flex",
-        flexDirection: "column",
-        gap: 0,
-        overflow: "hidden",
-      }}>
-        <div className="modal-header">
-          <div>
-            <div style={{ color: "var(--white)", fontWeight: 700, fontSize: 18 }}>{label}</div>
-            <div style={{ color: "var(--sec)", fontSize: 13, marginTop: 2 }}>{hint}</div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 16px" }}>
+      {/* Field label */}
+      <div style={{ width: "100%", marginBottom: 12 }}>
+        <div style={{ color: "var(--white)", fontWeight: 700, fontSize: 20, fontFamily: "'Oswald', sans-serif", letterSpacing: 0.5 }}>
+          {label}
+        </div>
+        <div style={{ color: "var(--sec)", fontSize: 13, marginTop: 2 }}>{hint}</div>
+      </div>
+
+      {/* Canvas */}
+      <div className="canvas-wrap" style={{ width: "100%", position: "relative" }}>
+        <canvas
+          ref={canvasRef}
+          className="canvas-el"
+          width={460}
+          height={220}
+          style={{ width: "100%", height: "auto", touchAction: "none" }}
+          onMouseDown={startDraw}
+          onMouseMove={continueDraw}
+          onMouseUp={endDraw}
+          onMouseLeave={endDraw}
+          onTouchStart={e => { e.preventDefault(); startDraw(e); }}
+          onTouchMove={e => { e.preventDefault(); continueDraw(e); }}
+          onTouchEnd={e => { e.preventDefault(); endDraw(); }}
+        />
+        {detected && (
+          <div className="detected-badge">
+            ✓ <strong>{detected}</strong>
           </div>
-          <button className="modal-close-btn" onClick={onClose}>✕</button>
-        </div>
+        )}
+      </div>
 
-        <div className="canvas-wrap">
-          <canvas
-            ref={canvasRef}
-            className="canvas-el"
-            width={460}
-            height={220}
-            onMouseDown={startDraw}
-            onMouseMove={continueDraw}
-            onMouseUp={endDraw}
-            onMouseLeave={endDraw}
-            onTouchStart={e => { e.preventDefault(); startDraw(e); }}
-            onTouchMove={e => { e.preventDefault(); continueDraw(e); }}
-            onTouchEnd={e => { e.preventDefault(); endDraw(); }}
-          />
-          {detected && (
-            <div className="detected-badge">
-              Detected: <strong>{detected}</strong>
-            </div>
-          )}
-        </div>
-
-        <div style={{ display: "flex", gap: 10, padding: 16 }}>
-          <button className="cta-btn" style={{ flex: 1 }} disabled={!detected} onClick={confirm}>
-            Confirm
-          </button>
-          <button className="secondary-btn" style={{ flex: 1 }} onClick={clearCanvas}>
-            Clear
-          </button>
-          <button className="ghost-btn" style={{ flex: 1 }} onClick={onClose}>
-            Close
-          </button>
-        </div>
+      {/* Clear only — no Confirm needed, auto-advances */}
+      <div style={{ display: "flex", gap: 10, padding: "12px 0", width: "100%" }}>
+        <button className="ghost-btn" style={{ flex: 1 }} onClick={clearCanvas}>
+          Clear
+        </button>
       </div>
     </div>
   );
