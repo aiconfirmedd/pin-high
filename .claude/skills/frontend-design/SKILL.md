@@ -18,7 +18,7 @@ Before writing a single line of code, commit to a **BOLD aesthetic direction**:
 - **Differentiation**: What makes this UNFORGETTABLE vs every other golf app?
 
 For Pin High, the committed aesthetic is:
-> **Luxury Dark Metal** — like a premium golf watch. Copper/bronze accents on near-black steel. Every element earns its place. Sparse, confident, weighted.
+> **Design 1 Dark Premium** — black course-day utility, dark cards, crisp white text, and orange scoring accents. The app should feel focused, durable, and fast on a phone.
 
 ---
 
@@ -26,38 +26,31 @@ For Pin High, the committed aesthetic is:
 
 ### Color Tokens (from `src/index.css`)
 ```css
---bg: #18181A;           /* near-black steel background */
---card: #222224;         /* card surface */
---surface2: #2C2C2E;     /* elevated surface */
---topbar: #101012;       /* deepest black */
---copper: #C4762A;       /* primary accent */
---copper-lt: #D48B3A;    /* lighter copper */
---copper-shine: #E0A550; /* highlight copper */
+--bg: #1A1A1A;        /* app background */
+--card: #242424;      /* card/surface */
+--surface2: #2E2E2E;  /* secondary surface */
+--topbar: #111111;    /* top and bottom bars */
+--orange: #E87722;    /* buttons, active states, under-par stats */
+--orange-lt: #FF9340; /* birdie circles and positive highlights */
 --green: #2D8A35;        /* fairway green */
 --green-lt: #3DAA45;
---white: #F5F5F7;
---sec: #8E8E93;          /* secondary text */
---muted: #48484A;        /* muted/disabled */
---grad-copper: linear-gradient(135deg, #D48B3A 0%, #C4762A 50%, #8B4E1A 100%);
---grad-topbar: linear-gradient(180deg, #1E1E20 0%, #101012 100%);
+--white: #FFFFFF;
+--sec: #888888;       /* secondary text */
+--muted: #555555;     /* muted/disabled */
+--grid: #333333;      /* table/grid lines */
 ```
 
 ### Typography
-- **Brand font**: `'Oswald', sans-serif` (loaded from Google Fonts) — tall, condensed, commanding
-- **UI font**: system-ui / -apple-system for body text
-- **Copper gradient text technique**:
-  ```css
-  background: var(--grad-copper);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  ```
-- **NEVER use**: Inter, Roboto, Arial, generic sans-serif for headings
+- **UI font**: system-ui / -apple-system for every screen
+- **Display text**: white, compact, and readable in sunlight
+- **Accent text**: use `var(--orange)` or `var(--orange-lt)`, not gradients
+- **NEVER use**: purple/blue gradients, orange/bronze themes, or marketing-style hero pages
 
 ### Spacing & Layout
-- Mobile-first: max-width 430px, full-height viewport
-- Bottom nav: 56px fixed, content area scrolls above it
+- Mobile-first: edge-to-edge app shell with `viewport-fit=cover`
+- Bottom nav: 60px plus safe-area inset, content area scrolls above it
 - Card radius: 12–14px
-- Grid lines: `1px solid var(--grid)` (`#3A3A3C`)
+- Grid lines: `1px solid var(--grid)` (`#333333`)
 - Generous whitespace — don't crowd elements
 
 ### Motion Principles
@@ -79,7 +72,7 @@ For Pin High, the committed aesthetic is:
   display: "flex", flexDirection: "column"
 }}>
   {/* Fixed header */}
-  <div style={{ background: "var(--grad-topbar)", borderBottom: "1px solid var(--grid)", padding: "14px 16px" }}>
+  <div style={{ background: "var(--topbar)", borderBottom: "1px solid var(--grid)", padding: "14px 16px" }}>
     ...
   </div>
   {/* Scrollable content */}
@@ -96,7 +89,7 @@ For Pin High, the committed aesthetic is:
 ### Primary CTA Button
 ```css
 .cta-btn {
-  background: var(--grad-copper);
+  background: var(--orange);
   color: #fff;
   border-radius: 12px;
   font-weight: 700;
@@ -122,8 +115,8 @@ For Pin High, the committed aesthetic is:
 ```
 
 ### Number/Score Display
-- Large copper-gradient text for scores (48–72px)
-- Birdie: `var(--copper-shine)` — eagle: gold glow
+- Large orange text for key scores/stats (48–72px where appropriate)
+- Birdie: `var(--orange-lt)` circle; eagle/albatross use double/triple orange rings
 - Over par: `var(--sec)` — subtle, not alarming
 - Even par: `var(--white)`
 
@@ -157,7 +150,7 @@ For Pin High, the committed aesthetic is:
 After entering a shot result of "miss", show a directional pad:
 - Render a compass-style ring with 8 directions (L, FL, F, FR, R, BR, B, BL)
 - User swipes toward miss direction — velocity determines selection
-- Selected direction glows copper; haptic feedback
+- Selected direction uses orange border/fill; haptic feedback
 - Auto-advances after 400ms hold or swipe release
 - Store as `hole.missDirection: string` alongside `hole.miss: string`
 
@@ -165,7 +158,7 @@ After entering a shot result of "miss", show a directional pad:
 Activated for approach shots from ≤100 yards:
 - Canvas element rendering overhead view of a generic putting green (oval, flag at center-right)
 - If course preset uploaded: use actual green shape SVG
-- Tap to place: pin location marker (copper dot), approach landing zone (circle)
+- Tap to place: pin location marker (orange dot), approach landing zone (circle)
 - Store as `hole.approachLanding: { x: number, y: number }` (0–1 normalized coords)
 - Second tap moves the marker; long press clears it
 
@@ -182,7 +175,6 @@ Activated for approach shots from ≤100 yards:
 
 - All new components go in `src/components/`
 - Types live in `src/types.ts` — extend `Hole` interface for new fields
-- Supabase sync happens in `App.tsx` `handleRoundChange()` — it already upserts the full round including `holes` array as JSONB
-- No additional Supabase schema changes needed for Phase 2 (all new data lives inside the `holes` JSONB column)
+- Persistence is local-first. Use localStorage helpers in `src/utils/localStorageStore.ts`; do not add backend auth or Supabase sync unless the user explicitly asks.
 - Follow existing patterns: no class components, hooks only, inline styles matching design tokens
 - Test on mobile viewport (375px wide) — this is primary target

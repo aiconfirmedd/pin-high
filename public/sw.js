@@ -11,6 +11,7 @@ const CACHE_ASSETS = [
   '/manifest.json',
   '/favicon.png',
   '/icons.svg',
+  '/icon.svg',
   '/icon-192.png',
   '/icon-512.png',
   '/pin-high-logo.jpg',

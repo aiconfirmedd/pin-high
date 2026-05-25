@@ -1,7 +1,7 @@
 // src/components/CaddieMode.tsx
 // Pin High — Caddie Mode
 // Live GPS + course layout + wind + club recommendation
-// Design: Luxury Dark Metal (copper/bronze on near-black steel)
+// Design: Luxury Dark Metal (orange/bronze on near-black steel)
 
 import { useState, useEffect, useRef } from "react";
 import { recommendClub, MY_BAG, MY_STATS, type ClubEntry } from "../data/playerProfile";
@@ -93,7 +93,7 @@ function compassLabel(deg: number): string {
 function distanceColor(yds: number): string {
   if (yds <= 100) return "#3DAA45";
   if (yds <= 150) return "#D4C44A";
-  if (yds <= 200) return "#C4762A";
+  if (yds <= 200) return "#E87722";
   return "#E05555";
 }
 
@@ -108,23 +108,23 @@ function WindCompass({ wind }: { wind: WindData }) {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
       <svg width={72} height={72} style={{ overflow: "visible" }}>
         {/* Compass ring */}
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#3A3A3C" strokeWidth={1.5} />
-        <circle cx={cx} cy={cy} r={r - 8} fill="none" stroke="#2C2C2E" strokeWidth={8} />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#333333" strokeWidth={1.5} />
+        <circle cx={cx} cy={cy} r={r - 8} fill="none" stroke="#2E2E2E" strokeWidth={8} />
         {/* Cardinal marks */}
         {["N","E","S","W"].map((dir, i) => {
           const a = (i * 90 * Math.PI) / 180;
           return (
             <text key={dir} x={cx + (r - 4) * Math.sin(a)} y={cy - (r - 4) * Math.cos(a)}
               textAnchor="middle" dominantBaseline="middle"
-              fontSize={8} fill={dir === "N" ? "#C4762A" : "#8E8E93"} fontWeight="700">
+              fontSize={8} fill={dir === "N" ? "#E87722" : "#8E8E93"} fontWeight="700">
               {dir}
             </text>
           );
         })}
         {/* Wind arrow */}
         <line x1={cx} y1={cy} x2={ax} y2={ay}
-          stroke="#C4762A" strokeWidth={2.5} strokeLinecap="round" />
-        <circle cx={ax} cy={ay} r={3} fill="#C4762A" />
+          stroke="#E87722" strokeWidth={2.5} strokeLinecap="round" />
+        <circle cx={ax} cy={ay} r={3} fill="#E87722" />
         <circle cx={cx} cy={cy} r={3} fill="#48484A" />
       </svg>
       <div style={{ textAlign: "center" }}>
@@ -132,7 +132,7 @@ function WindCompass({ wind }: { wind: WindData }) {
           {wind.speedMph} <span style={{ fontSize: 11, color: "#8E8E93" }}>mph</span>
         </div>
         <div style={{ color: "#8E8E93", fontSize: 11 }}>{compassLabel(wind.directionDeg)}</div>
-        {wind.gust && <div style={{ color: "#C4762A", fontSize: 10 }}>Gusts {wind.gust}</div>}
+        {wind.gust && <div style={{ color: "#E87722", fontSize: 10 }}>Gusts {wind.gust}</div>}
       </div>
     </div>
   );
@@ -195,11 +195,11 @@ function HoleMap({
         const color = h.type === "water" ? "#1A5CA8"
           : h.type === "bunker" ? "#C8B96A"
           : h.type === "trees" ? "#1A4020"
-          : "#8B4E1A";
+          : "#B85B14";
         const stroke = h.type === "water" ? "#2D7ACC"
           : h.type === "bunker" ? "#D4C44A"
           : h.type === "trees" ? "#2D6030"
-          : "#C4762A";
+          : "#E87722";
         return (
           <g key={i}>
             <ellipse cx={hx} cy={hy} rx={rx} ry={ry} fill={color} stroke={stroke} strokeWidth={1} opacity={0.85} />
@@ -219,10 +219,10 @@ function HoleMap({
         const zx = z.side === "left" ? cx - 18 : z.side === "right" ? cx + 18 : cx;
         return (
           <g key={i} opacity={0.6}>
-            <circle cx={zx} cy={zy} r={5} fill="none" stroke="#C4762A" strokeWidth={1} strokeDasharray="3 2" />
+            <circle cx={zx} cy={zy} r={5} fill="none" stroke="#E87722" strokeWidth={1} strokeDasharray="3 2" />
             <line x1={cx - 30} x2={cx + 30} y1={zy} y2={zy}
-              stroke="#C4762A" strokeWidth={0.5} strokeDasharray="4 4" opacity={0.4} />
-            <text x={cx + 35} y={zy + 3} fontSize={7} fill="#C4762A">{z.distanceYds}y</text>
+              stroke="#E87722" strokeWidth={0.5} strokeDasharray="4 4" opacity={0.4} />
+            <text x={cx + 35} y={zy + 3} fontSize={7} fill="#E87722">{z.distanceYds}y</text>
           </g>
         );
       })}
@@ -236,7 +236,7 @@ function HoleMap({
         fill="#E05555" />
 
       {/* Tee box */}
-      <rect x={cx - 8} y={H - 22} width={16} height={8} fill="#4A4A4C" rx={2} />
+      <rect x={cx - 8} y={H - 22} width={16} height={8} fill="#333333" rx={2} />
       <text x={cx} y={H - 15} textAnchor="middle" fontSize={7} fill="#8E8E93">TEE</text>
 
       {/* Distance rings from pin */}
@@ -255,9 +255,9 @@ function HoleMap({
       {/* Player position */}
       {playerDistFromTee > 0 && playerDistFromTee < totalYds && (
         <g>
-          <circle cx={cx} cy={playerY} r={7} fill="#C4762A" opacity={0.25} />
-          <circle cx={cx} cy={playerY} r={4} fill="#C4762A" />
-          <text x={cx + 12} y={playerY + 4} fontSize={9} fill="#C4762A" fontWeight="700">
+          <circle cx={cx} cy={playerY} r={7} fill="#E87722" opacity={0.25} />
+          <circle cx={cx} cy={playerY} r={4} fill="#E87722" />
+          <text x={cx + 12} y={playerY + 4} fontSize={9} fill="#E87722" fontWeight="700">
             {Math.round(playerDistFromPin)}y
           </text>
         </g>
@@ -265,7 +265,7 @@ function HoleMap({
 
       {/* Hole label */}
       <text x={10} y={18} fontSize={10} fill="#8E8E93">#{hole.number}</text>
-      <text x={W - 10} y={18} textAnchor="end" fontSize={10} fill="#C4762A" fontWeight="700">
+      <text x={W - 10} y={18} textAnchor="end" fontSize={10} fill="#E87722" fontWeight="700">
         Par {hole.par}
       </text>
     </svg>
@@ -279,8 +279,8 @@ function ClubChip({ club, highlighted }: { club: ClubEntry; highlighted: boolean
     <div style={{
       padding: "6px 12px",
       borderRadius: 20,
-      background: highlighted ? "var(--grad-copper, linear-gradient(135deg,#D48B3A,#C4762A,#8B4E1A))" : "#2C2C2E",
-      border: highlighted ? "none" : "1px solid #3A3A3C",
+      background: highlighted ? "var(--grad-orange, linear-gradient(135deg,#FF9340,#E87722,#B85B14))" : "#2E2E2E",
+      border: highlighted ? "none" : "1px solid #333333",
       color: highlighted ? "#FFF" : "#8E8E93",
       fontSize: 13,
       fontWeight: highlighted ? 700 : 400,
@@ -304,7 +304,7 @@ interface StrategyTabProps {
   windToPin: boolean;
 }
 
-function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin }: StrategyTabProps) {
+function StrategyTab({ holeNumber, holePar, course, windMph, windToPin }: StrategyTabProps) {
   const s = course.holes.find(h => h.hole === holeNumber);
   const isBirdieHole = course.birdieWindows.includes(holeNumber);
   const isDefendHole = course.parDefendHoles.includes(holeNumber);
@@ -334,16 +334,16 @@ function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin 
   return (
     <>
       {/* Hole header badge */}
-      <div style={{ ...cardStyle, border: "1px solid #C4762A40", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{ ...cardStyle, border: "1px solid #E8772240", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <div style={{ ...labelStyle, color: "#C4762A" }}>{course.courseName}</div>
+          <div style={{ ...labelStyle, color: "#E87722" }}>{course.courseName}</div>
           <div style={{ color: "#F5F5F7", fontSize: 15, fontFamily: "'Oswald',sans-serif", fontWeight: 700 }}>
             Hole {s.hole} · Par {s.par} · {s.yds} yds · HDCP {s.hdcp}
           </div>
         </div>
         <div style={{
-          background: isBirdieHole ? "#3DAA4525" : isDefendHole ? "#E0555520" : "#2C2C2E",
-          border: `1px solid ${isBirdieHole ? "#3DAA45" : isDefendHole ? "#E05555" : "#3A3A3C"}`,
+          background: isBirdieHole ? "#3DAA4525" : isDefendHole ? "#E0555520" : "#2E2E2E",
+          border: `1px solid ${isBirdieHole ? "#3DAA45" : isDefendHole ? "#E05555" : "#333333"}`,
           borderRadius: 10, padding: "4px 10px",
           color: isBirdieHole ? "#3DAA45" : isDefendHole ? "#E05555" : "#8E8E93",
           fontSize: 11, fontWeight: 700,
@@ -354,14 +354,14 @@ function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin 
 
       {/* Aim + ideal play */}
       <div style={cardStyle}>
-        <div style={{ ...labelStyle, color: "#C4762A" }}>🎯 Aim Point</div>
+        <div style={{ ...labelStyle, color: "#E87722" }}>🎯 Aim Point</div>
         <div style={bodyStyle}>{s.aim}</div>
       </div>
 
       <div style={cardStyle}>
         <div style={{ ...labelStyle, color: "#D4C44A" }}>⛳ Ideal Play</div>
         <div style={bodyStyle}>{s.ideal}</div>
-        <div style={{ marginTop: 8, padding: "6px 10px", background: "#2C2C2E", borderRadius: 8, color: "#C4762A", fontSize: 12 }}>
+        <div style={{ marginTop: 8, padding: "6px 10px", background: "#2E2E2E", borderRadius: 8, color: "#E87722", fontSize: 12 }}>
           🥏 Wedge guide: {s.wedge}
         </div>
       </div>
@@ -407,7 +407,7 @@ function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin 
         ].map(({ label, val }) => (
           <div key={label} style={{
             display: "flex", justifyContent: "space-between",
-            padding: "5px 0", borderBottom: "1px solid #2C2C2E",
+            padding: "5px 0", borderBottom: "1px solid #2E2E2E",
           }}>
             <div style={{ color: "#8E8E93", fontSize: 13 }}>{label}</div>
             <div style={{ color: "#F5F5F7", fontSize: 13, fontFamily: "'Oswald',sans-serif", fontWeight: 600 }}>{val}</div>
@@ -432,9 +432,9 @@ function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin 
         {course.keyPrinciples.map((p, i) => (
           <div key={i} style={{
             display: "flex", gap: 8, padding: "5px 0",
-            borderBottom: i < course.keyPrinciples.length - 1 ? "1px solid #2C2C2E" : "none",
+            borderBottom: i < course.keyPrinciples.length - 1 ? "1px solid #2E2E2E" : "none",
           }}>
-            <div style={{ color: "#C4762A", fontSize: 11, marginTop: 2, flexShrink: 0 }}>{i + 1}.</div>
+            <div style={{ color: "#E87722", fontSize: 11, marginTop: 2, flexShrink: 0 }}>{i + 1}.</div>
             <div style={{ color: "#AEAEB2", fontSize: 12, lineHeight: 1.5 }}>{p}</div>
           </div>
         ))}
@@ -446,7 +446,7 @@ function StrategyTab({ holeNumber, holePar, holeYds, course, windMph, windToPin 
         {course.preRoundChecklist.map((item, i) => (
           <div key={i} style={{
             display: "flex", gap: 8, alignItems: "flex-start", padding: "4px 0",
-            borderBottom: i < course.preRoundChecklist.length - 1 ? "1px solid #2C2C2E" : "none",
+            borderBottom: i < course.preRoundChecklist.length - 1 ? "1px solid #2E2E2E" : "none",
           }}>
             <div style={{ color: "#3DAA45", fontSize: 10, marginTop: 3, flexShrink: 0 }}>▸</div>
             <div style={{ color: "#AEAEB2", fontSize: 12 }}>{item}</div>
@@ -546,7 +546,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 200,
-      background: "#101012",
+      background: "#111111",
       display: "flex", flexDirection: "column",
       fontFamily: "system-ui, -apple-system, sans-serif",
       userSelect: "none",
@@ -556,8 +556,8 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "12px 16px 8px",
-        background: "linear-gradient(180deg,#1E1E20 0%,#101012 100%)",
-        borderBottom: "1px solid #2C2C2E",
+        background: "linear-gradient(180deg,#1E1E20 0%,#111111 100%)",
+        borderBottom: "1px solid #2E2E2E",
         flexShrink: 0,
       }}>
         <button onClick={onClose} style={{
@@ -569,7 +569,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
           <div style={{
             fontFamily: "'Oswald', sans-serif",
             fontSize: 18, fontWeight: 700, letterSpacing: "0.08em",
-            background: "linear-gradient(135deg,#D48B3A 0%,#C4762A 50%,#8B4E1A 100%)",
+            background: "linear-gradient(135deg,#FF9340 0%,#E87722 50%,#B85B14 100%)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
           }}>CADDIE MODE</div>
           <div style={{ color: "#8E8E93", fontSize: 11 }}>
@@ -590,8 +590,8 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
       {/* ── Distance hero ── */}
       <div style={{
         padding: "16px 20px 12px",
-        background: "#18181A",
-        borderBottom: "1px solid #2C2C2E",
+        background: "#1A1A1A",
+        borderBottom: "1px solid #2E2E2E",
         flexShrink: 0,
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -636,7 +636,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
               min={0} max={hole.yardage.white}
               value={distToPin}
               onChange={handleDistSlide}
-              style={{ width: "100%", accentColor: "#C4762A" }}
+              style={{ width: "100%", accentColor: "#E87722" }}
             />
             <div style={{ display: "flex", justifyContent: "space-between", color: "#48484A", fontSize: 10 }}>
               <span>0</span><span style={{ color: "#8E8E93" }}>Slide to set distance</span><span>{hole.yardage.white}</span>
@@ -648,7 +648,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
       {/* ── Wind manual edit ── */}
       {showWindEdit && (
         <div style={{
-          background: "#1C1C1E", borderBottom: "1px solid #2C2C2E",
+          background: "#1C1C1E", borderBottom: "1px solid #2E2E2E",
           padding: "10px 16px", flexShrink: 0,
         }}>
           <div style={{ color: "#8E8E93", fontSize: 11, marginBottom: 6 }}>Manual wind override</div>
@@ -657,14 +657,14 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
               <div style={{ color: "#48484A", fontSize: 10 }}>Speed (mph)</div>
               <input type="range" min={0} max={40} value={wind.speedMph}
                 onChange={e => setWind(w => ({ ...w, speedMph: Number(e.target.value), source: "manual" }))}
-                style={{ width: "100%", accentColor: "#C4762A" }} />
+                style={{ width: "100%", accentColor: "#E87722" }} />
               <div style={{ color: "#F5F5F7", fontSize: 13, textAlign: "center" }}>{wind.speedMph}</div>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ color: "#48484A", fontSize: 10 }}>Direction</div>
               <input type="range" min={0} max={359} value={wind.directionDeg}
                 onChange={e => setWind(w => ({ ...w, directionDeg: Number(e.target.value), source: "manual" }))}
-                style={{ width: "100%", accentColor: "#C4762A" }} />
+                style={{ width: "100%", accentColor: "#E87722" }} />
               <div style={{ color: "#F5F5F7", fontSize: 13, textAlign: "center" }}>{compassLabel(wind.directionDeg)}</div>
             </div>
             <div>
@@ -673,8 +673,8 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                 onClick={() => setWindToPin(v => !v)}
                 style={{
                   padding: "6px 10px", borderRadius: 8, fontSize: 11,
-                  background: windToPin ? "#C4762A" : "#2C2C2E",
-                  border: "1px solid #3A3A3C", color: "#F5F5F7", cursor: "pointer",
+                  background: windToPin ? "#E87722" : "#2E2E2E",
+                  border: "1px solid #333333", color: "#F5F5F7", cursor: "pointer",
                 }}
               >
                 {windToPin ? "🌬 Into" : "🌬 With"}
@@ -687,19 +687,19 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
       {/* ── Tab bar ── */}
       <div style={{
         display: "flex",
-        borderBottom: "1px solid #2C2C2E",
-        flexShrink: 0, background: "#18181A",
+        borderBottom: "1px solid #2E2E2E",
+        flexShrink: 0, background: "#1A1A1A",
       }}>
         {(["map", "clubs", "strategy"] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             flex: 1, padding: "10px 0",
             background: "none", border: "none",
-            color: activeTab === tab ? "#C4762A" : "#8E8E93",
+            color: activeTab === tab ? "#E87722" : "#8E8E93",
             fontSize: 12, fontWeight: activeTab === tab ? 700 : 400,
             fontFamily: "'Oswald', sans-serif",
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            borderBottom: activeTab === tab ? "2px solid #C4762A" : "2px solid transparent",
+            borderBottom: activeTab === tab ? "2px solid #E87722" : "2px solid transparent",
             cursor: "pointer",
           }}>
             {tab === "map" ? "⬜ Map" : tab === "clubs" ? "🏌 Clubs" : "🎯 Strategy"}
@@ -716,7 +716,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
             {/* Club recommendation card */}
             <div style={{
               background: "#1C1C1E", borderRadius: 14,
-              border: "1px solid #C4762A40",
+              border: "1px solid #E8772240",
               padding: "14px 16px",
             }}>
               <div style={{ color: "#8E8E93", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
@@ -727,7 +727,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                   <div style={{
                     fontFamily: "'Oswald', sans-serif",
                     fontSize: 32, fontWeight: 700,
-                    background: "linear-gradient(135deg,#D48B3A,#C4762A,#8B4E1A)",
+                    background: "linear-gradient(135deg,#FF9340,#E87722,#B85B14)",
                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                   }}>{rec.club.slot}</div>
                   <div style={{ color: "#8E8E93", fontSize: 11 }}>
@@ -755,7 +755,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
             <div style={{ borderRadius: 14, overflow: "hidden", background: "#1A1A1C" }}>
               <div style={{ padding: "10px 14px 6px", background: "#1C1C1E", display: "flex", justifyContent: "space-between" }}>
                 <div style={{ color: "#8E8E93", fontSize: 11 }}>Course Layout</div>
-                <div style={{ color: "#C4762A", fontSize: 11, fontFamily: "'Oswald',sans-serif" }}>
+                <div style={{ color: "#E87722", fontSize: 11, fontFamily: "'Oswald',sans-serif" }}>
                   HCP {hole.handicap}
                 </div>
               </div>
@@ -768,7 +768,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                   { color: "#C8B96A", label: "Bunker" },
                   { color: "#1A5CA8", label: "Water" },
                   { color: "#1A4020", label: "Trees" },
-                  { color: "#C4762A", label: "Layup" },
+                  { color: "#E87722", label: "Layup" },
                 ].map(l => (
                   <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <div style={{ width: 10, height: 10, borderRadius: 2, background: l.color }} />
@@ -791,7 +791,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                     <div key={i} style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center",
                       padding: "7px 0",
-                      borderBottom: i < hole.hazards.length - 1 ? "1px solid #2C2C2E" : "none",
+                      borderBottom: i < hole.hazards.length - 1 ? "1px solid #2E2E2E" : "none",
                     }}>
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         <div style={{
@@ -833,7 +833,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
             <div style={{ background: "#1C1C1E", borderRadius: 14, padding: "14px 16px" }}>
               <div style={{ color: "#8E8E93", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
                 Best Options · {Math.round(distToPin)}y to pin
-                {wind.speedMph > 2 && <span style={{ color: "#C4762A" }}> · {wind.speedMph}mph {windToPin ? "head" : "tail"}wind</span>}
+                {wind.speedMph > 2 && <span style={{ color: "#E87722" }}> · {wind.speedMph}mph {windToPin ? "head" : "tail"}wind</span>}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 <ClubChip club={rec.club} highlighted />
@@ -853,23 +853,23 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                   <div key={i} style={{
                     display: "flex", alignItems: "center", gap: 10,
                     padding: "6px 0",
-                    borderBottom: i < MY_BAG.length - 2 ? "1px solid #2C2C2E" : "none",
+                    borderBottom: i < MY_BAG.length - 2 ? "1px solid #2E2E2E" : "none",
                   }}>
                     <div style={{
-                      width: 56, color: isRec ? "#C4762A" : "#8E8E93",
+                      width: 56, color: isRec ? "#E87722" : "#8E8E93",
                       fontSize: 13, fontFamily: "'Oswald',sans-serif",
                       fontWeight: isRec ? 700 : 400,
                     }}>{club.slot}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{
                         height: 6, borderRadius: 3,
-                        background: "#2C2C2E",
+                        background: "#2E2E2E",
                         overflow: "hidden",
                       }}>
                         <div style={{
                           height: "100%", width: `${pct}%`,
                           background: isRec
-                            ? "linear-gradient(90deg,#C4762A,#D48B3A)"
+                            ? "linear-gradient(90deg,#E87722,#FF9340)"
                             : distanceColor(Math.abs(club.distanceYds - distToPin)),
                           borderRadius: 3,
                           transition: "width 0.3s ease",
@@ -878,7 +878,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
                     </div>
                     <div style={{
                       width: 44, textAlign: "right",
-                      color: isRec ? "#E0A550" : "#F5F5F7",
+                      color: isRec ? "#FF9340" : "#F5F5F7",
                       fontSize: 14, fontFamily: "'Oswald',sans-serif",
                       fontWeight: isRec ? 700 : 400,
                     }}>{club.distanceYds}y</div>

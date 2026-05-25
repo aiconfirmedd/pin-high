@@ -1,54 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#242426"/>
-      <stop offset="100%" stop-color="#18181A"/>
-    </linearGradient>
-    <linearGradient id="pole" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#8B6410"/>
-      <stop offset="40%" stop-color="#D4A030"/>
-      <stop offset="100%" stop-color="#9A7218"/>
-    </linearGradient>
-    <linearGradient id="flag" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#D98E38"/>
-      <stop offset="55%" stop-color="#C07028"/>
-      <stop offset="100%" stop-color="#7A4010"/>
-    </linearGradient>
-    <linearGradient id="grn" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3DAA45"/>
-      <stop offset="100%" stop-color="#1E6B24"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Background -->
-  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
-  <rect width="192" height="192" rx="38" fill="none" stroke="#3C3C3E" stroke-width="1.5"/>
-
-  <!-- Putting green -->
-  <ellipse cx="88" cy="168" rx="58" ry="18" fill="url(#grn)"/>
-  <!-- Green highlight -->
-  <ellipse cx="78" cy="160" rx="30" ry="8" fill="#4DC455" opacity="0.18"/>
-  <!-- Hole cup -->
-  <ellipse cx="88" cy="167" rx="7" ry="3" fill="#0A0A0C"/>
-
-  <!-- Flagpole -->
-  <rect x="83" y="44" width="8" height="128" rx="4" fill="url(#pole)"/>
-  <!-- Pole shine -->
-  <rect x="85" y="44" width="2.5" height="128" rx="1.5" fill="#E8C060" opacity="0.3"/>
-
-  <!-- Flag pennant — bold, fills right half of icon -->
-  <path d="M91 46 L158 78 L91 110 Z" fill="url(#flag)"/>
-  <!-- Flag highlight sheen -->
-  <path d="M91 46 L148 74 L91 62 Z" fill="#E8A840" opacity="0.22"/>
-  <!-- Flag top edge glint -->
-  <path d="M91 46 L158 78" stroke="#E8B040" stroke-width="1.2" fill="none" opacity="0.45"/>
-
-  <!-- PH monogram centered on flag -->
-  <text x="127" y="85" font-family="Georgia, 'Times New Roman', serif"
-        font-size="22" font-weight="700" fill="#F8F0E0"
-        text-anchor="middle" opacity="0.92">PH</text>
-
-  <!-- PIN HIGH wordmark at bottom -->
-  <text x="96" y="207" font-family="-apple-system, 'Arial Black', Arial, sans-serif"
-        font-size="0" fill="#C4762A" text-anchor="middle"/>
+  <rect width="192" height="192" fill="#1A1A1A"/>
+  <rect x="88" y="40" width="6" height="110" rx="3" fill="#888888"/>
+  <polygon points="94,40 94,85 130,62" fill="#E87722"/>
+  <ellipse cx="91" cy="150" rx="18" ry="6" fill="#333333"/>
 </svg>

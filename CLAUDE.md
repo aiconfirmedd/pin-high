@@ -4,14 +4,14 @@ Last updated: 2026-05-25
 
 ## Current Objective
 
-Get Claude aligned with the Pin High / Ask My Caddie transfer work.
+Keep Claude/Codex aligned on Pin High as a standalone personal golf PWA.
 
-The immediate user-approved scope is **audit only**:
+Latest implemented direction:
 
-- Inventory what can transfer from the Ask My Caddie / Tactical HUD agent into Pin High.
-- Identify what should become local repo docs or scripts.
-- Identify what still requires Twin.SO or another external operator.
-- Do not implement app code, deploy, scrape, upload, authenticate, or make external account changes unless the user explicitly asks.
+- Design 1 Dark Premium is the active visual system.
+- Authentication is local only: player name plus simple password, stored on-device.
+- PWA icons, manifest, and service worker should remain install-ready.
+- The app should remain usable offline on the course.
 
 ## Active Repo
 
@@ -26,10 +26,10 @@ Repo facts found locally:
 - Remote: `https://github.com/aiconfirmedd/pin-high.git`
 - Branch: `main`
 - Stack: React + TypeScript + Vite PWA
-- Persistence: Supabase plus localStorage helpers
-- Design system: luxury dark metal / copper, defined in `src/index.css` and `.claude/skills/frontend-design/SKILL.md`
+- Persistence: localStorage only, including simple local name/password login
+- Design system: Design 1 Dark Premium, defined in `src/index.css` and `.claude/skills/frontend-design/SKILL.md`
 - Main guided entry surface: `src/components/GuidedHoleEntry.tsx`
-- Round sync: `src/App.tsx` `handleRoundChange`, storing `holes` as JSONB
+- Round persistence: `src/App.tsx` `handleRoundChange`, using localStorage helpers
 
 Reference-only folder:
 
@@ -141,7 +141,7 @@ Keep these outside Pin High unless the user explicitly asks to integrate them:
 Likely not a direct Pin High transfer:
 
 - Single-file GitHub Pages build architecture
-- Tactical HUD styling as-is; Pin High should keep its luxury dark metal/copper visual system
+- Tactical HUD styling as-is; Pin High should keep the Design 1 Dark Premium visual system
 - SQLite wrapper-specific implementation details, unless writing migration/import scripts for the old agent
 
 ## GitHub/Auth Constraint
@@ -184,4 +184,3 @@ Build verification, only if implementation later happens:
 ```bash
 npm run build
 ```
-

@@ -94,7 +94,7 @@ export default function PhotoImporter({ onOcrComplete, onClose }: Props) {
             <div style={{ marginBottom: 12 }}>
               <div style={{ color: "var(--sec)", fontSize: 12, marginBottom: 4 }}>Scanning... {progress}%</div>
               <div style={{ height: 4, background: "var(--border)", borderRadius: 2 }}>
-                <div style={{ height: "100%", width: `${progress}%`, background: "var(--copper)", borderRadius: 2, transition: "width 0.2s" }} />
+                <div style={{ height: "100%", width: `${progress}%`, background: "var(--orange)", borderRadius: 2, transition: "width 0.2s" }} />
               </div>
             </div>
           )}

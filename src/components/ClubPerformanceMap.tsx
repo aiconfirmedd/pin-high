@@ -132,7 +132,7 @@ function SpecPicker({ value, onChange }: SpecPickerProps) {
                 key={b}
                 style={{
                   ...dropItemStyle,
-                  background: b === selectedBrand ? "rgba(196,118,42,0.15)" : "transparent",
+                  background: b === selectedBrand ? "rgba(232,119,34,0.15)" : "transparent",
                   color: b === selectedBrand ? "var(--orange)" : "var(--white)",
                 }}
                 onMouseDown={() => pickBrand(b)}
@@ -272,7 +272,7 @@ function AddClubModal({ onAdd, onClose }: AddClubModalProps) {
                 {slotSuggestions.map(s => (
                   <div
                     key={s}
-                    style={{ ...dropItemStyle, background: s === slotName ? "rgba(196,118,42,0.15)" : "transparent" }}
+                    style={{ ...dropItemStyle, background: s === slotName ? "rgba(232,119,34,0.15)" : "transparent" }}
                     onMouseDown={() => { setSlotName(s); setSlotQuery(s); setShowSlots(false); }}
                   >
                     {s}
