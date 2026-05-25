@@ -37,7 +37,7 @@ export const CLUB_BRANDS: readonly string[] = [
 ];
 
 export const CLUB_MODELS: ClubModel[] = [
-  // âââ TITLEIST DRIVERS ââââââââââââââââââââââââââââââââââââ
+  // --- TITLEIST DRIVERS ------------------------------------
   { brand: "Titleist", model: "GT2", type: "driver", years: "2024" },
   { brand: "Titleist", model: "GT3", type: "driver", years: "2024" },
   { brand: "Titleist", model: "GT4", type: "driver", years: "2024" },
@@ -50,7 +50,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Titleist", model: "TS3", type: "driver", years: "2018-2019" },
   { brand: "Titleist", model: "917 D2", type: "driver", years: "2016-2017" },
   { brand: "Titleist", model: "917 D3", type: "driver", years: "2016-2017" },
-  // âââ TITLEIST FAIRWAYS âââââââââââââââââââââââââââââââââââ
+  // --- TITLEIST FAIRWAYS -----------------------------------
   { brand: "Titleist", model: "GT2", type: "fairway", years: "2024" },
   { brand: "Titleist", model: "GT3", type: "fairway", years: "2024" },
   { brand: "Titleist", model: "TSR2", type: "fairway", years: "2022-2023" },
@@ -58,10 +58,10 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Titleist", model: "TSi2", type: "fairway", years: "2020-2021" },
   { brand: "Titleist", model: "TSi3", type: "fairway", years: "2020-2021" },
   { brand: "Titleist", model: "TS2", type: "fairway", years: "2018-2019" },
-  // âââ TITLEIST HYBRIDS ââââââââââââââââââââââââââââââââââââ
+  // --- TITLEIST HYBRIDS ------------------------------------
   { brand: "Titleist", model: "TSi2", type: "hybrid", years: "2020-2021" },
   { brand: "Titleist", model: "TSi3", type: "hybrid", years: "2020-2021" },
-  // âââ TITLEIST IRONS ââââââââââââââââââââââââââââââââââââââ
+  // --- TITLEIST IRONS --------------------------------------
   { brand: "Titleist", model: "T100", type: "iron", years: "2019-2024" },
   { brand: "Titleist", model: "T100S", type: "iron", years: "2021-2024" },
   { brand: "Titleist", model: "T150", type: "iron", years: "2022-2024" },
@@ -73,14 +73,14 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Titleist", model: "AP3", type: "iron", years: "2017-2018" },
   { brand: "Titleist", model: "CB", type: "iron", years: "2005-2018" },
   { brand: "Titleist", model: "MB", type: "iron", years: "2005-2018" },
-  // âââ VOKEY WEDGES ââââââââââââââââââââââââââââââââââââââââ
+  // --- VOKEY WEDGES ----------------------------------------
   { brand: "Vokey", model: "SM10", type: "wedge", years: "2024" },
   { brand: "Vokey", model: "SM9", type: "wedge", years: "2022-2023" },
   { brand: "Vokey", model: "SM8", type: "wedge", years: "2020-2021" },
   { brand: "Vokey", model: "SM7", type: "wedge", years: "2018-2019" },
   { brand: "Vokey", model: "SM6", type: "wedge", years: "2016-2017" },
   { brand: "Vokey", model: "SM5", type: "wedge", years: "2014-2015" },
-  // âââ SCOTTY CAMERON PUTTERS ââââââââââââââââââââââââââââââ
+  // --- SCOTTY CAMERON PUTTERS ------------------------------
   { brand: "Scotty Cameron", model: "Super Select Newport 2", type: "putter", years: "2023-2024" },
   { brand: "Scotty Cameron", model: "Super Select GoLo 5", type: "putter", years: "2023-2024" },
   { brand: "Scotty Cameron", model: "Super Select Del Mar", type: "putter", years: "2023-2024" },
@@ -93,7 +93,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Scotty Cameron", model: "Special Select Del Mar", type: "putter", years: "2020-2022" },
   { brand: "Scotty Cameron", model: "Select Newport 2", type: "putter", years: "2014-2019" },
   { brand: "Scotty Cameron", model: "Futura X5", type: "putter", years: "2014-2018" },
-  // âââ CALLAWAY DRIVERS ââââââââââââââââââââââââââââââââââââ
+  // --- CALLAWAY DRIVERS ------------------------------------
   { brand: "Callaway", model: "Paradym Ai Smoke", type: "driver", years: "2024" },
   { brand: "Callaway", model: "Paradym Ai Smoke Max", type: "driver", years: "2024" },
   { brand: "Callaway", model: "Paradym Ai Smoke LS", type: "driver", years: "2024" },
@@ -107,7 +107,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Callaway", model: "Epic Speed", type: "driver", years: "2021" },
   { brand: "Callaway", model: "Mavrik", type: "driver", years: "2020" },
   { brand: "Callaway", model: "Epic Flash", type: "driver", years: "2019" },
-  // âââ CALLAWAY IRONS ââââââââââââââââââââââââââââââââââââââ
+  // --- CALLAWAY IRONS --------------------------------------
   { brand: "Callaway", model: "Apex Pro", type: "iron", years: "2019-2024" },
   { brand: "Callaway", model: "Apex", type: "iron", years: "2019-2024" },
   { brand: "Callaway", model: "Apex CB", type: "iron", years: "2021-2024" },
@@ -115,11 +115,11 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Callaway", model: "Mavrik Pro", type: "iron", years: "2020" },
   { brand: "Callaway", model: "Rogue ST Pro", type: "iron", years: "2022" },
   { brand: "Callaway", model: "X Forged CB", type: "iron", years: "2021-2024" },
-  // âââ CALLAWAY WEDGES & PUTTERS âââââââââââââââââââââââââââ
+  // --- CALLAWAY WEDGES & PUTTERS ---------------------------
   { brand: "Callaway", model: "Mack Daddy CB", type: "wedge", years: "2022-2024" },
   { brand: "Callaway", model: "Mack Daddy Forged", type: "wedge", years: "2022-2024" },
   { brand: "Callaway", model: "Mack Daddy 5", type: "wedge", years: "2019-2021" },
-  // âââ ODYSSEY PUTTERS âââââââââââââââââââââââââââââââââââââ
+  // --- ODYSSEY PUTTERS -------------------------------------
   { brand: "Odyssey", model: "White Hot OG #1", type: "putter", years: "2021-2024" },
   { brand: "Odyssey", model: "White Hot OG #2", type: "putter", years: "2021-2024" },
   { brand: "Odyssey", model: "White Hot OG #7", type: "putter", years: "2021-2024" },
@@ -129,7 +129,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Odyssey", model: "Ai-One #1", type: "putter", years: "2023-2024" },
   { brand: "Odyssey", model: "Ai-One Milled Seven", type: "putter", years: "2023-2024" },
   { brand: "Odyssey", model: "Stroke Lab", type: "putter", years: "2019-2022" },
-  // âââ TAYLORMADE DRIVERS ââââââââââââââââââââââââââââââââââ
+  // --- TAYLORMADE DRIVERS ----------------------------------
   { brand: "TaylorMade", model: "Qi35", type: "driver", years: "2025" },
   { brand: "TaylorMade", model: "Qi35 LS", type: "driver", years: "2025" },
   { brand: "TaylorMade", model: "Qi35 Max", type: "driver", years: "2025" },
@@ -145,7 +145,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "TaylorMade", model: "SIM", type: "driver", years: "2020" },
   { brand: "TaylorMade", model: "M5", type: "driver", years: "2019" },
   { brand: "TaylorMade", model: "M6", type: "driver", years: "2019" },
-  // âââ TAYLORMADE FAIRWAYS & HYBRIDS âââââââââââââââââââââââ
+  // --- TAYLORMADE FAIRWAYS & HYBRIDS -----------------------
   { brand: "TaylorMade", model: "Qi35", type: "fairway", years: "2025" },
   { brand: "TaylorMade", model: "Qi10", type: "fairway", years: "2024" },
   { brand: "TaylorMade", model: "Stealth 2", type: "fairway", years: "2023" },
@@ -154,7 +154,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "TaylorMade", model: "Qi10", type: "hybrid", years: "2024" },
   { brand: "TaylorMade", model: "Stealth 2", type: "hybrid", years: "2023" },
   { brand: "TaylorMade", model: "SIM2 Rescue", type: "hybrid", years: "2021" },
-  // âââ TAYLORMADE IRONS ââââââââââââââââââââââââââââââââââââ
+  // --- TAYLORMADE IRONS ------------------------------------
   { brand: "TaylorMade", model: "P790", type: "iron", years: "2017-2024" },
   { brand: "TaylorMade", model: "P770", type: "iron", years: "2017-2024" },
   { brand: "TaylorMade", model: "P760", type: "iron", years: "2019-2021" },
@@ -162,7 +162,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "TaylorMade", model: "P7MC", type: "iron", years: "2021-2024" },
   { brand: "TaylorMade", model: "P7TW", type: "iron", years: "2019-2024" },
   { brand: "TaylorMade", model: "Qi10", type: "iron", years: "2024" },
-  // âââ TAYLORMADE WEDGES & PUTTERS âââââââââââââââââââââââââ
+  // --- TAYLORMADE WEDGES & PUTTERS -------------------------
   { brand: "TaylorMade", model: "MG4", type: "wedge", years: "2024-2025" },
   { brand: "TaylorMade", model: "MG3", type: "wedge", years: "2022-2023" },
   { brand: "TaylorMade", model: "Hi-Toe 4", type: "wedge", years: "2024-2025" },
@@ -170,7 +170,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "TaylorMade", model: "Spider GT Max", type: "putter", years: "2022-2024" },
   { brand: "TaylorMade", model: "Spider X", type: "putter", years: "2019-2022" },
   { brand: "TaylorMade", model: "TP Hydro Blast", type: "putter", years: "2021-2024" },
-  // âââ PING ââââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- PING ------------------------------------------------
   { brand: "Ping", model: "G430 Max", type: "driver", years: "2022-2024" },
   { brand: "Ping", model: "G430 Max 10K", type: "driver", years: "2024" },
   { brand: "Ping", model: "G430 LS Tec", type: "driver", years: "2022-2024" },
@@ -193,7 +193,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Ping", model: "PLD Milled Anser", type: "putter", years: "2022-2024" },
   { brand: "Ping", model: "PLD Milled DS72", type: "putter", years: "2022-2024" },
   { brand: "Ping", model: "Sigma 2 Anser", type: "putter", years: "2018-2022" },
-  // âââ MIZUNO ââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- MIZUNO ----------------------------------------------
   { brand: "Mizuno", model: "ST-Z 230", type: "driver", years: "2022-2023" },
   { brand: "Mizuno", model: "ST-X 220", type: "driver", years: "2021-2022" },
   { brand: "Mizuno", model: "JPX923 Forged", type: "iron", years: "2022-2023" },
@@ -208,7 +208,7 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Mizuno", model: "T22", type: "wedge", years: "2021-2023" },
   { brand: "Mizuno", model: "T24", type: "wedge", years: "2023-2024" },
   { brand: "Mizuno", model: "M Craft OMOI", type: "putter", years: "2021-2024" },
-  // âââ COBRA âââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- COBRA -----------------------------------------------
   { brand: "Cobra", model: "Darkspeed", type: "driver", years: "2024" },
   { brand: "Cobra", model: "Darkspeed LS", type: "driver", years: "2024" },
   { brand: "Cobra", model: "Darkspeed Max", type: "driver", years: "2024" },
@@ -221,13 +221,13 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Cobra", model: "King Forged Tour", type: "iron", years: "2019-2024" },
   { brand: "Cobra", model: "King TEC", type: "iron", years: "2022-2024" },
   { brand: "Cobra", model: "Snakebite", type: "wedge", years: "2020-2024" },
-  // âââ CLEVELAND âââââââââââââââââââââââââââââââââââââââââââ
+  // --- CLEVELAND -------------------------------------------
   { brand: "Cleveland", model: "RTX 6 ZipCore", type: "wedge", years: "2022-2024" },
   { brand: "Cleveland", model: "RTX Full-Face 2", type: "wedge", years: "2022-2024" },
   { brand: "Cleveland", model: "CBX Full-Face 2", type: "wedge", years: "2022-2024" },
   { brand: "Cleveland", model: "RTX ZipCore", type: "wedge", years: "2020-2021" },
   { brand: "Cleveland", model: "Frontline Elite Elevado", type: "putter", years: "2022-2024" },
-  // âââ SRIXON ââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- SRIXON ----------------------------------------------
   { brand: "Srixon", model: "ZX7 Mk II", type: "driver", years: "2022-2024" },
   { brand: "Srixon", model: "ZX5 Mk II", type: "driver", years: "2022-2024" },
   { brand: "Srixon", model: "ZX7", type: "driver", years: "2020-2021" },
@@ -236,26 +236,26 @@ export const CLUB_MODELS: ClubModel[] = [
   { brand: "Srixon", model: "ZX4 Mk II", type: "iron", years: "2022-2024" },
   { brand: "Srixon", model: "ZX7", type: "iron", years: "2020-2021" },
   { brand: "Srixon", model: "Z 785", type: "iron", years: "2019-2020" },
-  // âââ BRIDGESTONE âââââââââââââââââââââââââââââââââââââââââ
+  // --- BRIDGESTONE -----------------------------------------
   { brand: "Bridgestone", model: "Tour B X", type: "driver", years: "2022-2024" },
   { brand: "Bridgestone", model: "Tour B JGR", type: "driver", years: "2020-2022" },
   { brand: "Bridgestone", model: "J225", type: "iron", years: "2022-2024" },
-  // âââ WILSON ââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- WILSON ----------------------------------------------
   { brand: "Wilson", model: "D9", type: "driver", years: "2021-2023" },
   { brand: "Wilson", model: "Dynapower Forged", type: "iron", years: "2022-2023" },
   { brand: "Wilson", model: "Staff Model CB", type: "iron", years: "2020-2023" },
   { brand: "Wilson", model: "Staff Model Blade", type: "iron", years: "2020-2023" },
-  // âââ ADAMS âââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- ADAMS -----------------------------------------------
   { brand: "Adams", model: "Super S", type: "hybrid", years: "2014-2015" },
   { brand: "Adams", model: "Tight Lies", type: "fairway", years: "2013-2015" },
-  // âââ NIKE (pre-2016) âââââââââââââââââââââââââââââââââââââ
+  // --- NIKE (pre-2016) -------------------------------------
   { brand: "Nike", model: "Vapor Fly Pro", type: "driver", years: "2016" },
   { brand: "Nike", model: "Vapor Speed", type: "driver", years: "2015" },
   { brand: "Nike", model: "VRS Covert 2.0", type: "driver", years: "2014" },
   { brand: "Nike", model: "Vapor Pro Combo", type: "iron", years: "2015" },
   { brand: "Nike", model: "VR_S Pro Combo", type: "iron", years: "2013-2014" },
   { brand: "Nike", model: "Method Mod 44", type: "putter", years: "2015" },
-  // âââ PXG âââââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- PXG -------------------------------------------------
   { brand: "PXG", model: "0311 XP GEN6", type: "iron", years: "2023-2024" },
   { brand: "PXG", model: "0311 GEN6", type: "iron", years: "2023-2024" },
   { brand: "PXG", model: "0211 GEN5", type: "iron", years: "2022-2024" },

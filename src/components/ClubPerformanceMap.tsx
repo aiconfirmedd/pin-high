@@ -34,7 +34,7 @@ function numOrEmpty(v: string): number | "" {
   return isNaN(n) ? "" : n;
 }
 
-// âââ Autocomplete spec picker ââââââââââââââââââââââââââââââââââââââââââââââââ
+// --- Autocomplete spec picker ------------------------------------------------
 interface SpecPickerProps {
   value: string;
   onChange: (spec: string) => void;
@@ -150,7 +150,7 @@ function SpecPicker({ value, onChange }: SpecPickerProps) {
         )}
       </div>
 
-      {/* Model picker â shown after brand selected or manual entry */}
+      {/* Model picker - shown after brand selected or manual entry */}
       <div style={{ position: "relative" }}>
         <label className="form-label" style={{ marginBottom: 4 }}>Model</label>
         <input
@@ -171,7 +171,7 @@ function SpecPicker({ value, onChange }: SpecPickerProps) {
                 onMouseDown={() => pickModel(m.brand, m.model)}
               >
                 <span style={{ fontWeight: 600 }}>{m.model}</span>
-                <span style={{ color: "var(--sec)", fontSize: 12, marginLeft: 8 }}>{m.type} Â· {m.years}</span>
+                <span style={{ color: "var(--sec)", fontSize: 12, marginLeft: 8 }}>{m.type}  -  {m.years}</span>
               </div>
             ))}
             <div
@@ -194,7 +194,7 @@ function SpecPicker({ value, onChange }: SpecPickerProps) {
   );
 }
 
-// âââ Add Club Modal ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// --- Add Club Modal ----------------------------------------------------------
 interface AddClubModalProps {
   onAdd: (club: Club) => void;
   onClose: () => void;
@@ -301,7 +301,7 @@ function AddClubModal({ onAdd, onClose }: AddClubModalProps) {
   );
 }
 
-// âââ Main Component ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// --- Main Component ----------------------------------------------------------
 export default function ClubPerformanceMap({ clubs, onClubsChange }: Props) {
   const [editId, setEditId] = React.useState<string | null>(null);
   const [editData, setEditData] = React.useState<Club | null>(null);

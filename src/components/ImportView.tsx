@@ -105,7 +105,7 @@ export default function ImportView({ onImportComplete, onClose }: Props) {
     onClose();
   }
 
-  // âââ Step: Choose ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- Step: Choose --------------------------------------------------------
   if (step === "choose") {
     return (
       <div style={{ padding: "24px 16px", maxWidth: 520, margin: "0 auto" }}>
@@ -153,7 +153,7 @@ export default function ImportView({ onImportComplete, onClose }: Props) {
     );
   }
 
-  // âââ Step: Manual Entry ââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- Step: Manual Entry --------------------------------------------------
   if (step === "manual") {
     return (
       <div style={{ padding: "24px 16px", maxWidth: 600, margin: "0 auto" }}>
@@ -287,7 +287,7 @@ export default function ImportView({ onImportComplete, onClose }: Props) {
     );
   }
 
-  // âââ Step: Review ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // --- Step: Review --------------------------------------------------------
   if (step === "review" && reviewRound) {
     const totalScore = reviewRound.holes.reduce((sum, h) => sum + (typeof h.score === "number" ? h.score : 0), 0);
     const totalPar = reviewRound.holes.reduce((sum, h) => sum + (typeof h.par === "number" ? h.par : 0), 0);
@@ -315,9 +315,9 @@ export default function ImportView({ onImportComplete, onClose }: Props) {
           <div className="card-body">
             <div style={{ fontWeight: 700, fontSize: 16, color: "var(--orange)", marginBottom: 4 }}>{reviewRound.courseName}</div>
             <div style={{ color: "var(--sec)", fontSize: 13, marginBottom: 12 }}>
-              {reviewRound.teeName && <span>{reviewRound.teeName} tees Â· </span>}
+              {reviewRound.teeName && <span>{reviewRound.teeName} tees  -  </span>}
               {reviewRound.date}
-              {reviewRound.playerName && <span> Â· {reviewRound.playerName}</span>}
+              {reviewRound.playerName && <span>  -  {reviewRound.playerName}</span>}
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>

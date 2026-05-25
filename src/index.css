@@ -1149,7 +1149,7 @@ input, textarea {
 }
 
 
-/* Ã¢ÂÂÃ¢ÂÂ Auth Hero & Premium Landing Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
+/* Auth Hero & Premium Landing */
 .auth-card--hero {
   max-width: 420px;
   padding: 0;
@@ -1316,7 +1316,7 @@ input, textarea {
 }
 
 /* ============================================================
-   Responsive Breakpoints â Mobile-first multi-breakpoint system
+   Responsive Breakpoints - Mobile-first multi-breakpoint system
    ============================================================ */
 
 /* Small phones: < 375px */
@@ -1864,7 +1864,7 @@ input, textarea {
 }
 
 /* ============================================================
-   CourseSetup Improvements â Tap targets and layout
+   CourseSetup Improvements - Tap targets and layout
    ============================================================ */
 
 /* Preset checkbox - larger tap target wrapper */

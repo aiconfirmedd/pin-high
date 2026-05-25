@@ -157,14 +157,14 @@ export default function CourseSetup({ onStart }: Props) {
 
       <div className="action-rail" aria-label="Round setup shortcuts">
         <button className="action-card" onClick={() => setShowPresets(true)}>
-          <span className="action-icon">â£</span>
+          <span className="action-icon">P</span>
           <span>
             <strong>Load Preset</strong>
             <small>Start from a saved course</small>
           </span>
         </button>
         <button className="action-card" onClick={() => setShowPhoto(true)}>
-          <span className="action-icon">â</span>
+          <span className="action-icon">O</span>
           <span>
             <strong>Photo Import</strong>
             <small>Read yards and par from a card</small>
@@ -243,7 +243,7 @@ export default function CourseSetup({ onStart }: Props) {
       <div className="card showcase-card" style={{ marginBottom: 16 }}>
         <div className="card-header">Hole Information</div>
         <div className="card-body">
-          {["Front 9 (1â9)", "Back 9 (10â18)"].map((label, sectionIdx) => (
+          {["Front 9 (1-9)", "Back 9 (10-18)"].map((label, sectionIdx) => (
             <div key={sectionIdx} className="hole-panel">
               <div className="hole-panel-title">{label}</div>
               <div className="hole-entry-head">
@@ -275,7 +275,7 @@ export default function CourseSetup({ onStart }: Props) {
       {error && <div className="setup-error">{error}</div>}
 
       <button className="cta-btn" style={{ width: "100%" }} onClick={handleStart}>
-        Start Round â
+        Start Round
       </button>
 
       {showPresets && <SavedPresets onLoad={loadPreset} onClose={() => setShowPresets(false)} />}

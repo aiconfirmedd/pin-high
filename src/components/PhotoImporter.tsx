@@ -50,7 +50,7 @@ export default function PhotoImporter({ onOcrComplete, onClose }: Props) {
         onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <span style={{ fontWeight: 700, fontSize: 16, color: "var(--white)" }}>Import Scorecard Photo</span>
-          <button className="icon-btn" onClick={onClose} aria-label="Close">â</button>
+          <button className="icon-btn" onClick={onClose} aria-label="Close">X</button>
         </div>
 
         <div style={{ padding: "16px 16px 0" }}>
@@ -73,7 +73,7 @@ export default function PhotoImporter({ onOcrComplete, onClose }: Props) {
               <img src={imageUrl} alt="Scorecard preview" style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 6 }} />
             ) : (
               <>
-                <div style={{ fontSize: 28, marginBottom: 6 }}>ð·</div>
+                <div style={{ fontSize: 28, marginBottom: 6 }}>Photo</div>
                 <div>Tap to select or take a photo</div>
               </>
             )}
@@ -107,7 +107,7 @@ export default function PhotoImporter({ onOcrComplete, onClose }: Props) {
             disabled={!imageUrl || running}
             onClick={runOcr}
           >
-            {running ? "Scanningâ¦" : "Scan Scorecard"}
+            {running ? "Scanning..." : "Scan Scorecard"}
           </button>
           <button className="ghost-btn" onClick={onClose} style={{ minWidth: 80 }}>
             Cancel

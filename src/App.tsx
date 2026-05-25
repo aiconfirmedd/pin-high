@@ -24,7 +24,7 @@ function makeDefaultClubs(): Club[] {
     { name: "3 Wood", spec: "TaylorMade Qi35" },
     { name: "7 Wood", spec: "TaylorMade Qi10" },
     { name: "4 Iron", spec: "TaylorMade P790" },
-    { name: "5Ã¢ÂÂ9 Iron / PW", spec: "TaylorMade P770" },
+    { name: "5-9 Iron / PW", spec: "TaylorMade P770" },
     { name: "50deg GW", spec: "TaylorMade MG4" },
     { name: "54deg SW", spec: "Vokey SM11 M Grind" },
     { name: "58deg LW", spec: "Vokey SM11 T Grind" },
@@ -57,6 +57,7 @@ export default function App() {
   const [staleRoundBanner, setStaleRoundBanner] = useState(false);
   const [showReflectionPrompt, setShowReflectionPrompt] = useState(false);
   const lastRoundUpdateRef = useRef<number>(0);
+  const appContentRef = useRef<HTMLDivElement | null>(null);
 
   // Stale round reminder: show banner if active round has not been updated in 15 minutes.
   useEffect(() => {
@@ -72,6 +73,10 @@ export default function App() {
     }, CHECK_INTERVAL);
     return () => clearInterval(id);
   }, [round, view]);
+
+  useEffect(() => {
+    appContentRef.current?.scrollTo({ top: 0, left: 0 });
+  }, [view, round?.id]);
 
   // Not signed in
   if (!session) {
@@ -135,7 +140,7 @@ export default function App() {
   return (
     <div className="app">
       {/* Main content */}
-      <div className="app-content">
+      <div className="app-content" ref={appContentRef}>
         {view === "setup" && (
           <div>
             <CourseSetup onStart={handleRoundStart} />

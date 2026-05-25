@@ -9,6 +9,7 @@ const CACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/favicon.ico',
   '/favicon.png',
   '/icons.svg',
   '/icon.svg',

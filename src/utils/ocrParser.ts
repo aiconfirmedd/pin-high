@@ -11,7 +11,7 @@ export function parseOcrText(rawText: string): {
 
   const lines = rawText.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-  // Find rows with numbers that look like yardages (50â700) and par values (3,4,5)
+  // Find rows with numbers that look like yardages (50-700) and par values (3,4,5)
   const yardageRows: number[][] = [];
   const parRows: number[][] = [];
 
@@ -62,7 +62,7 @@ export function parseOcrText(rawText: string): {
 
   // --- Course name extraction ---
   // Look for lines near the top of the text that look like a course/club name.
-  // Heuristics: line is mostly letters/spaces, not all-caps numbers, length 4â60,
+  // Heuristics: line is mostly letters/spaces, not all-caps numbers, length 4-60,
   // appears before the first yardage row, doesn't match known scorecard labels.
   const SKIP_PATTERNS = /^(hole|yards|yardage|par|handicap|hcp|stroke|score|out|in|total|date|player|name|tee|front|back|men|women|red|white|blue|gold|black|green|platinum)$/i;
   const NUMBER_HEAVY = /^[\d\s./-]+$/;
