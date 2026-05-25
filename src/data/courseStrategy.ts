@@ -1,0 +1,269 @@
+// src/data/courseStrategy.ts
+// Calusa Country Club — Hole-by-Hole Strategy
+// Source: Calusa_CC_Strategy.pdf · Lakewood Ranch, FL · Gordon Lewis Design
+// Calibrated to: Terrell Pittinger bag (Titleist GT2 driver, draw bias, RH)
+
+export interface HoleStrategy {
+  hole: number;
+  par: number;
+  yds: number;
+  hdcp: number;
+  target: "Par" | "Birdie" | "Eagle Look" | "Par/Birdie";
+  features: string;
+  hazards: string;
+  aim: string;
+  ideal: string;
+  wedge: string;
+  go?: string;   // when to be aggressive
+  noGo?: string; // when to lay back
+}
+
+export interface CourseStrategyDoc {
+  courseId: string;
+  courseName: string;
+  location: string;
+  designer: string;
+  par: number;
+  yds: number;
+  tee: string;
+  slope: number;
+  rating: number;
+  opened: string;
+  courseNotes: string[];
+  keyPrinciples: string[];
+  roundTargets: { tier: string; front: string; back: string; total: string; notes: string }[];
+  birdieWindows: number[];
+  parDefendHoles: number[];
+  preRoundChecklist: string[];
+  holes: HoleStrategy[];
+}
+
+export const CALUSA_CC: CourseStrategyDoc = {
+  courseId: "calusa-cc",
+  courseName: "Calusa Country Club",
+  location: "Lakewood Ranch, FL",
+  designer: "Gordon Lewis",
+  par: 72,
+  yds: 5972,
+  tee: "White III",
+  slope: 143,
+  rating: 75.3,
+  opened: "Feb 2025",
+
+  courseNotes: [
+    "Water on ALL 18 holes",
+    "Tifeagle greens — firm and fast, grain matters",
+    "Bimini fairways — extra roll, trust 3W/7W carry numbers",
+    "No mature trees — full wind exposure on every hole",
+    "White sand bunkers, greenside-heavy",
+    "New course (2025) — verify hazards with GolfLogix before tee",
+  ],
+
+  keyPrinciples: [
+    "Driver-OFF holes (#2, #5, #10, #11) — use 7W or 3W to set up full-wedge yardages. Driver overpowers into water.",
+    "Aim default (RH + draw): right edge of fairway/target. Draw works ball back to center. Never aim where a fade is required.",
+    "Wedge by lie: 58° T-grind for tight Bimini lies and Tifeagle pin attacks. 54° M-grind for rough/sand. 50° MG for 85–110 yds full.",
+    "Green strategy: Tifeagle is firm + grain. Land 5–10 yds short of pin, let release. Never short-side over water.",
+    "Wind rule: No trees = 1 club extra into wind, ½ club less downwind. Check flag before every shot.",
+  ],
+
+  roundTargets: [
+    { tier: "Conservative", front: "40–42", back: "39–41", total: "78–82", notes: "Pars-first, no doubles" },
+    { tier: "Realistic",    front: "37–39", back: "37–39", total: "74–78", notes: "If driving in fairway" },
+    { tier: "Best-case",    front: "35–36", back: "35–36", total: "70–72", notes: "3+ birdies, no doubles" },
+  ],
+
+  birdieWindows: [2, 3, 5, 8, 10, 11, 12, 15, 17],
+  parDefendHoles: [4, 15, 3, 12],
+
+  preRoundChecklist: [
+    "Wind direction — no trees = 1 club extra into wind",
+    "Pin sheet — note water side per green",
+    "GolfLogix flyovers for #4, #12, #15 (par-5 risk/reward decisions)",
+    "Confirm tee box: White III = 5972 yds",
+    "Bimini fairways = extra roll — trust 3W/7W carry numbers",
+    "Tifeagle greens = land short of pin, let it release",
+  ],
+
+  holes: [
+    {
+      hole: 1, par: 4, yds: 388, hdcp: 5, target: "Par",
+      features: "Opening par 4. Fairway bunkers in driver landing zone (240–280). Water left or short of green.",
+      hazards: "Fairway bunker right ~250 yds. Water left of green. Front bunker guarding green.",
+      aim: "Right-center fairway (right edge of left fairway bunker). Draw bias works back to center. Approach: center green, never short-side.",
+      ideal: "Driver (240–270 carry, draw) → 118–148 in. Approach with PW or 9-iron.",
+      wedge: "118–130 = PW · 130–148 = 9-iron · 50° MG tops at 110",
+    },
+    {
+      hole: 2, par: 4, yds: 277, hdcp: 13, target: "Birdie",
+      features: "Short par 4. Drivable temptation = trap. Water guarding front-right of green.",
+      hazards: "Water short-right of green if you go for it. Bunkers tight to drivable landing zone.",
+      aim: "Layup target: center fairway at 200 mark. Approach: aim 5 yds right of pin, let draw work in.",
+      ideal: "7W (190–210) or hybrid → 67–87 in. 54° M-grind full for spin and stop on Tifeagle.",
+      wedge: "65–85 = 54° M-grind full · 85–87 = 50° MG ¾",
+      go: "Driver only if downwind + dry conditions. Aim right edge of green, draw lands center. Eagle/birdie possible.",
+      noGo: "Crosswind, into wind, or any water visible — 7W layup. Don't sacrifice 2-stroke swing for hero shot.",
+    },
+    {
+      hole: 3, par: 5, yds: 495, hdcp: 3, target: "Birdie",
+      features: "Reachable par 5. HDCP 3 = course defense built in. Water likely guards green or layup zone.",
+      hazards: "Water near green almost certain. Fairway bunkers around 240–270 carry zone.",
+      aim: "Tee: right-center, draw to center. Layup: 100-yd marker, dry side of fairway. Approach: center green.",
+      ideal: "Driver → layup with 8-iron to 100 → 50° MG full.",
+      wedge: "100 = 50° MG full · 80 = 54° M-grind full · 60 = 58° T-grind full",
+      go: "Drive in fairway + ≤230 left + dry green-side: 3W (230–250) at green. Aim right edge, draw to center.",
+      noGo: "Drive offline, water visible green-side, or into wind — layup to 100, wedge in. Stress-free birdie putt.",
+    },
+    {
+      hole: 4, par: 5, yds: 505, hdcp: 1, target: "Par",
+      features: "Hardest hole on course. Longest par 5 from white. Multi-layer defense. Treat as 3-shot hole.",
+      hazards: "Multiple: fairway bunkers in primary landing zone, second-shot pinch, water guarding green.",
+      aim: "Tee: fairway-first, right side, draw to center. Layup: 100 in, wide side of fairway.",
+      ideal: "Driver fairway-first → 7W or 5-iron layup to 100 → 50° MG to center green.",
+      wedge: "100 = 50° MG full · Center green = stress-free 2-putt par",
+      go: "Only if perfect drive + zero wind + flat lie + no water green-front: 3W at green.",
+      noGo: "Default — layup to 100, wedge to center. Pars win HDCP 1.",
+    },
+    {
+      hole: 5, par: 4, yds: 303, hdcp: 11, target: "Birdie",
+      features: "Short par 4. Same risk profile as #2. Water tight to drivable landing zone.",
+      hazards: "Water tight to drivable landing zone. Greenside bunkers. No bail-out side.",
+      aim: "Layup: right-center fairway, draw to center, leaves 80–95 in. Approach: aim 3 yds right of pin.",
+      ideal: "7W (190–210) → 80–95 in → 50° MG (¾) or 54° M-grind (full at 80–85).",
+      wedge: "80–85 = 54° M-grind full · 85–95 = 50° MG ¾",
+      go: "Drivable only if: downwind + dry + pin in middle of green. Driver right edge, draw to center.",
+      noGo: "Default — 7W layup, wedge attack. Higher birdie % than chasing the green.",
+    },
+    {
+      hole: 6, par: 3, yds: 181, hdcp: 15, target: "Par",
+      features: "Mid-length par 3. Water guards one side. Wind exposure — no trees.",
+      hazards: "Water short or one side. Bunkers protecting green.",
+      aim: "Center of green — always. Aim slightly right of center pin location, draw to center.",
+      ideal: "5-iron or 6-iron depending on wind. Solid contact > pin attack.",
+      wedge: "If short: 54° M-grind for chip · Tight lies = 58° T-grind preferred",
+    },
+    {
+      hole: 7, par: 4, yds: 348, hdcp: 9, target: "Par",
+      features: "Mid par 4. Fairway bunkers around 240. Approach across or around water.",
+      hazards: "Fairway bunker right at ~240 carry. Greenside water (verify side on app).",
+      aim: "Tee: aim left edge of fairway, draw to center to avoid right bunker. Approach: aim away from water side.",
+      ideal: "Driver 240–270 → 78–108 in → 50° MG full or 54° M-grind.",
+      wedge: "78–85 = 54° M-grind full · 85–108 = 50° MG full or ¾",
+    },
+    {
+      hole: 8, par: 3, yds: 147, hdcp: 17, target: "Birdie",
+      features: "Shortest par 3 on course. Easiest hole. Water somewhere — Lewis par 3s never give freebies.",
+      hazards: "Water short of green almost certain. Bunkers guarding pin sides.",
+      aim: "If pin tucked over water: center green. If pin open: aim flag, draw 3 yds.",
+      ideal: "9-iron or PW depending on wind. Pin attack on dry side.",
+      wedge: "147 is beyond 50° MG range (110 max). 9-iron or PW only.",
+    },
+    {
+      hole: 9, par: 4, yds: 377, hdcp: 7, target: "Par",
+      features: "Closing front 9. Memorable/photogenic hole on Lewis layouts. Water signature.",
+      hazards: "Water near green probable. Fairway bunkers in driver landing zone.",
+      aim: "Tee: right-center, draw to center. Approach: center green, never short-side over water.",
+      ideal: "Driver → 107–137 in → 50° MG full (110), PW (110–130), or 9-iron (130+).",
+      wedge: "107–110 = 50° MG full · 110–130 = PW · 130+ = 9-iron",
+    },
+    {
+      hole: 10, par: 4, yds: 296, hdcp: 14, target: "Birdie",
+      features: "Short par 4. Same profile as #2 and #5. Drivable trap, water green-front.",
+      hazards: "Drivable green = water + bunker defense. Tight landing zone.",
+      aim: "Layup: right-center fairway, draw to 200 mark. Approach: 3 yds right of pin.",
+      ideal: "7W or hybrid (200) → 96 in → 50° MG full.",
+      wedge: "96 = 50° MG full · 75 = 54° M-grind full",
+      go: "Drivable: downwind + dry + 3+ pars in a row (momentum). Driver right edge, draw center.",
+      noGo: "Default for Balanced tier. 7W layup, wedge attack. Don't chase if not flowing.",
+    },
+    {
+      hole: 11, par: 4, yds: 333, hdcp: 12, target: "Birdie",
+      features: "Short par 4. Slightly longer than #10 but same logic. Water in play.",
+      hazards: "Greenside water typical. Fairway bunkers if driver attempted.",
+      aim: "Tee: right side, draw to center. Approach: center green, take birdie putt.",
+      ideal: "3W (230) or hybrid → 103 in → 50° MG full. Or driver if fairway open → 63–93 in.",
+      wedge: "55–65 = 58° T-grind full · 65–85 = 54° M-grind full · 85–105 = 50° MG",
+      go: "Driver if fairway is wide and water is only green-front (not in driver zone). Wedge attack on second.",
+      noGo: "Water tight to driver landing: 3W layup at 230, then 50° MG to center.",
+    },
+    {
+      hole: 12, par: 5, yds: 468, hdcp: 4, target: "Eagle Look",
+      features: "Shortest par 5 on course. Most aggressive hole for your distance. Reachable in 2.",
+      hazards: "Greenside water and bunkers. Layup zone may pinch.",
+      aim: "Tee: right-center, draw to center fairway. 2nd shot: right edge of green, draw to center pin.",
+      ideal: "Driver (240–270) → 198–228 in → 3W or 7W at green. Front-edge, 2-putt birdie.",
+      wedge: "Laid up to 100: 50° MG full · 75: 54° M-grind full · 60: 58° T-grind full",
+      go: "Drive in fairway + 198–228 left + clear sight: 3W or 4-iron at front edge. Eagle look.",
+      noGo: "Drive offline or water guarding back: layup to 100, full wedge in. Still birdie zone.",
+    },
+    {
+      hole: 13, par: 4, yds: 369, hdcp: 6, target: "Par",
+      features: "Mid-handicap par 4. HDCP 6 = subtle defense. Likely dogleg or staggered hazards.",
+      hazards: "Fairway bunker(s) in driver zone. Water flanking approach typical.",
+      aim: "Tee: opposite side from fairway bunker, draw back to center. Approach: fat side of green.",
+      ideal: "Driver → 99–129 in → 50° MG full (to 110) or PW (110+).",
+      wedge: "99–110 = 50° MG full · 110–129 = PW",
+    },
+    {
+      hole: 14, par: 3, yds: 160, hdcp: 16, target: "Par/Birdie",
+      features: "Short-mid par 3. Water signature on Lewis par 3s. Wind matters — no tree shelter.",
+      hazards: "Water short or side of green. Bunkers.",
+      aim: "Center green default. If pin is open and dry: aim flag, draw 3 yds left.",
+      ideal: "7-iron or 8-iron depending on wind.",
+      wedge: "Greenside chip: 58° T-grind from tight lie · 54° M-grind from rough",
+    },
+    {
+      hole: 15, par: 5, yds: 477, hdcp: 2, target: "Birdie",
+      features: "Second-hardest hole. Reachable par 5 with significant defense. Highest variance hole.",
+      hazards: "Multi-layer: fairway bunkers, water guarding 2nd shot AND green, narrow landing zones.",
+      aim: "Tee: fairway-first, center fairway. 2nd: layup wide-side at 100. Approach: center green.",
+      ideal: "Driver fairway-first → layup with 7W or 5-iron to 100 → 50° MG to center.",
+      wedge: "100 = 50° MG full",
+      go: "Only if drive is dead center + no wind + dry green-front: 3W or 4-iron at front edge. Rare conditions.",
+      noGo: "Default — 3-shot strategy. Layup to 100, wedge to center. Lock in birdie putt, avoid double.",
+    },
+    {
+      hole: 16, par: 4, yds: 363, hdcp: 10, target: "Par/Birdie",
+      features: "Solid mid-length par 4. Standard Lewis defense — bunkers, water on one side.",
+      hazards: "Fairway bunker in driver zone. Greenside water on one side.",
+      aim: "Tee: opposite side from water, draw to center. Approach: away from water side of green.",
+      ideal: "Driver → 93–123 in → 50° MG full (to 110) or PW (110+).",
+      wedge: "93–110 = 50° MG full · 110–123 = PW",
+    },
+    {
+      hole: 17, par: 3, yds: 127, hdcp: 18, target: "Birdie",
+      features: "Easiest hole on course. Short par 3 — birdie expectation. Water signature certain.",
+      hazards: "Water short of green near-certain. Pin tucks over water.",
+      aim: "Pin open + dry: aim flag, draw 2 yds. Pin tucked over water: center green, accept 2-putt par.",
+      ideal: "PW or 9-iron. Spin-and-stop on Tifeagle.",
+      wedge: "127 = PW or 9-iron · Soft landing critical",
+    },
+    {
+      hole: 18, par: 4, yds: 358, hdcp: 8, target: "Par",
+      features: "Signature finishing hole. Water guarding green almost certain. Don't bleed strokes here.",
+      hazards: "Water guarding green (front or side). Fairway bunkers in driver zone.",
+      aim: "Tee: fairway-first, opposite side from water. Approach: center green, finish clean.",
+      ideal: "Driver → 88–118 in → 50° MG full (to 110) or PW (110+).",
+      wedge: "88–110 = 50° MG full · 110–118 = PW",
+    },
+  ],
+};
+
+/** Get strategy for a specific hole number (1-18) */
+export function getHoleStrategy(courseId: string, hole: number): HoleStrategy | null {
+  const course = COURSES_BY_ID[courseId];
+  if (!course) return null;
+  return course.holes.find(h => h.hole === hole) ?? null;
+}
+
+/** Look up a course by ID */
+export function getCourse(courseId: string): CourseStrategyDoc | null {
+  return COURSES_BY_ID[courseId] ?? null;
+}
+
+/** Registry — add more courses here as they're documented */
+export const COURSES_BY_ID: Record<string, CourseStrategyDoc> = {
+  "calusa-cc": CALUSA_CC,
+};
+
+export const ALL_COURSES = Object.values(COURSES_BY_ID);

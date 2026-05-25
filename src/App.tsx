@@ -13,6 +13,7 @@ import PostRoundReflection from "./components/PostRoundReflection";
 import ClubPerformanceMap from "./components/ClubPerformanceMap";
 import GuidedHoleEntry from "./components/GuidedHoleEntry";
 import ImportView from "./components/ImportView";
+import { CaddieMode } from "./components/CaddieMode";
 
 function makeDefaultClubs(): Club[] {
   const specs = [
@@ -217,11 +218,11 @@ export default function App() {
   }
 
   const navItems: { id: AppView; label: string; icon: string }[] = [
-    { id: "scorecard", label: "Scorecard", icon: "Ã¢ÂÂ³" },
-    { id: "insight", label: "Insight", icon: "Ã°ÂÂÂ" },
-    { id: "clubs", label: "Clubs", icon: "Ã°ÂÂÂÃ¯Â¸Â" },
-    { id: "reflection", label: "Reflect", icon: "Ã¢ÂÂÃ¯Â¸Â" },
-    { id: "setup", label: "More", icon: "Ã¢ÂÂ°" },
+    { id: "scorecard", label: "Scorecard", icon: "🏌" },
+    { id: "caddie", label: "Caddie", icon: "🧭" },
+    { id: "insight", label: "Insight", icon: "📊" },
+    { id: "clubs", label: "Clubs", icon: "⛳" },
+    { id: "setup", label: "More", icon: "☰" },
   ];
 
   const showGuidedEntry = guidedHoleIdx !== null && round !== null;
@@ -391,6 +392,12 @@ export default function App() {
           <ImportView
             onImportComplete={handleImportComplete}
             onClose={() => setView("setup")}
+          />
+        )}
+
+        {view === "caddie" && (
+          <CaddieMode
+            onClose={() => setView("scorecard")}
           />
         )}
       </div>

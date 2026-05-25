@@ -69,4 +69,5 @@ export type AppView =
   | "insight"
   | "reflection"
   | "clubs"
-  | "import";
+  | "import"
+  | "caddie";

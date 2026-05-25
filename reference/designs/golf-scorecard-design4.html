@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Golf Scorecard — Design 4 · Frosted Glass</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep:  #1a3322;
+    --green-mid:   #2d5a3d;
+    --green-light: #3d7a52;
+    --glass-bg:    rgba(255,255,255,0.10);
+    --glass-bg2:   rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.20);
+    --glass-border2: rgba(255,255,255,0.12);
+    --orange:      #FF9340;
+    --orange-dk:   #E87722;
+    --white:       #FFFFFF;
+    --white-80:    rgba(255,255,255,0.80);
+    --white-60:    rgba(255,255,255,0.60);
+    --white-40:    rgba(255,255,255,0.40);
+    --white-20:    rgba(255,255,255,0.20);
+    --white-10:    rgba(255,255,255,0.10);
+    --text:        #FFFFFF;
+    --text-sec:    rgba(255,255,255,0.65);
+    --text-muted:  rgba(255,255,255,0.35);
+    --grid:        rgba(255,255,255,0.10);
+    --under:       #FF9340;
+    --over:        rgba(255,255,255,0.55);
+  }
+
+  body {
+    background: linear-gradient(160deg, var(--green-mid) 0%, var(--green-deep) 100%);
+    background-attachment: fixed;
+    color: var(--white);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* subtle grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  * { position: relative; z-index: 1; }
+
+  /* ── SCREEN NAV ── */
+  .screen-selector {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    display: flex;
+    background: rgba(26,51,34,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border2);
+    overflow-x: auto;
+  }
+  .screen-btn {
+    padding: 9px 14px; border: none; border-bottom: 3px solid transparent;
+    background: transparent; color: var(--white-40); font-size: 11px; font-weight: 500;
+    cursor: pointer; white-space: nowrap;
+  }
+  .screen-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  .screen { display: none; padding-top: 40px; min-height: 100vh; }
+  .screen.visible { display: block; }
+
+  /* ── GLASS MIXIN ── */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+  }
+  .glass-subtle {
+    background: var(--glass-bg2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border2);
+    border-radius: 12px;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: rgba(26,51,34,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border2);
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
+    position: sticky; top: 40px; z-index: 100;
+  }
+  .topbar-course { font-size: 16px; font-weight: 700; color: var(--white); }
+  .topbar-meta { font-size: 11px; color: var(--white-60); margin-top: 1px; }
+  .topbar-right { display: flex; gap: 8px; }
+  .icon-btn {
+    height: 34px; padding: 0 12px; border-radius: 20px;
+    background: var(--white-10); border: 1px solid var(--glass-border);
+    color: var(--white-80); font-size: 12px; font-weight: 500; cursor: pointer;
+    backdrop-filter: blur(8px);
+  }
+  .icon-btn.accent { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+  /* ── HERO SCORE CARD ── */
+  .hero-section { padding: 16px 14px 8px; }
+  .hero-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    position: relative; overflow: hidden;
+  }
+  /* decorative glow */
+  .hero-glass::before {
+    content: '';
+    position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(255,147,64,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+  .hero-course { font-size: 13px; color: var(--white-60); font-weight: 500; }
+  .hero-thru {
+    font-size: 11px; color: var(--white-60);
+    background: var(--white-10); border: 1px solid var(--glass-border);
+    padding: 3px 10px; border-radius: 12px;
+  }
+
+  .hero-main { display: flex; align-items: flex-end; gap: 16px; }
+  .hero-score { font-size: 72px; font-weight: 800; color: var(--white); line-height: 1; letter-spacing: -2px; }
+  .hero-right { display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
+  .hero-to-par {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800;
+    border: 2.5px solid var(--orange);
+    color: var(--orange);
+    background: rgba(255,147,64,0.12);
+    box-shadow: 0 0 20px rgba(255,147,64,0.25);
+  }
+  .hero-par-label { font-size: 10px; color: var(--white-40); text-align: center; margin-top: -2px; }
+
+  .hero-chips { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+  .hero-chip {
+    background: var(--white-10); border: 1px solid var(--glass-border);
+    border-radius: 20px; padding: 5px 12px;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .hero-chip-val { font-size: 14px; font-weight: 700; color: var(--white); }
+  .hero-chip-val.orange { color: var(--orange); }
+  .hero-chip-label { font-size: 10px; color: var(--white-60); }
+
+  /* ── SCORE SYMBOLS ── */
+  .sym-birdie {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--orange); color: var(--orange);
+    font-size: 12px; font-weight: 700;
+    box-shadow: 0 0 8px rgba(255,147,64,0.3);
+  }
+  .sym-eagle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--orange); color: var(--orange);
+    font-size: 12px; font-weight: 700;
+    outline: 2px solid var(--orange); outline-offset: 3px;
+    box-shadow: 0 0 12px rgba(255,147,64,0.4);
+  }
+  .sym-albatross {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--orange); color: var(--orange);
+    font-size: 10px; font-weight: 700;
+    box-shadow: 0 0 0 4px rgba(255,147,64,0.15), 0 0 0 6px var(--orange), 0 0 0 10px rgba(255,147,64,0.1), 0 0 0 12px var(--orange);
+  }
+  .sym-par { font-size: 13px; font-weight: 600; color: var(--white); }
+  .sym-bogey {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    border: 2px solid var(--white-40); color: var(--white-60);
+    font-size: 11px; font-weight: 700;
+  }
+  .sym-double {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    border: 2px solid var(--white-40); color: var(--white-60);
+    font-size: 11px; font-weight: 700;
+    outline: 2px solid var(--white-40); outline-offset: 3px;
+  }
+  .sym-triple {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px;
+    background: var(--white-10); color: var(--white-40);
+    font-size: 11px; font-weight: 700;
+  }
+
+  /* ── SCORECARD TABLE ── */
+  .section-header { padding: 10px 14px 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--white-40); }
+  .scorecard-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 14px 12px; }
+  .scorecard-table {
+    width: 100%; border-collapse: collapse; min-width: 520px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--glass-border);
+  }
+  .scorecard-table th {
+    background: rgba(255,255,255,0.06); color: var(--white-60);
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 8px 4px; text-align: center;
+    border-bottom: 1px solid var(--glass-border2);
+    border-right: 1px solid var(--glass-border2);
+  }
+  .scorecard-table th.col-score { color: var(--orange); }
+  .scorecard-table td {
+    text-align: center; font-size: 11px; height: 34px; padding: 0 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255,255,255,0.05);
+    color: var(--white-80);
+  }
+  td.hole-num-c { color: var(--white-40); font-weight: 700; font-size: 12px; background: rgba(255,255,255,0.04); }
+  td.yards-c { color: var(--white-40); font-size: 10px; }
+  td.par-c { color: var(--white-60); font-weight: 600; }
+  td.stat-hit { color: var(--orange); font-weight: 600; }
+  td.stat-miss { color: rgba(220,80,80,0.9); }
+  td.stat-na { color: var(--white-20); }
+  td.score-c { font-weight: 700; font-size: 13px; }
+  td.delta-under { color: var(--orange); font-weight: 700; }
+  td.delta-over  { color: var(--white-40); font-weight: 600; }
+  td.delta-even  { color: var(--white-30); }
+  tr.subtotal-r td { background: rgba(255,147,64,0.08); font-weight: 700; font-size: 11px; border-top: 1px solid rgba(255,147,64,0.2); }
+  tr.subtotal-r td.sub-score { color: var(--orange); font-size: 14px; }
+  tr.total-r td { background: rgba(255,147,64,0.15); font-weight: 700; border-top: 1px solid rgba(255,147,64,0.35); }
+  tr.total-r td.tot-score { color: var(--orange); font-size: 15px; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; padding: 0 14px;
+    border-bottom: 1px solid var(--glass-border2);
+    background: rgba(26,51,34,0.5);
+    backdrop-filter: blur(8px);
+    overflow-x: auto;
+  }
+  .tab { padding: 10px 14px; font-size: 12px; font-weight: 500; color: var(--white-40); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    background: rgba(26,51,34,0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border2);
+    display: flex; padding: 8px 0 20px;
+    position: sticky; bottom: 0;
+  }
+  .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .bnav-icon { font-size: 20px; color: var(--white-30); }
+  .bnav-icon.active { color: var(--orange); filter: drop-shadow(0 0 6px rgba(255,147,64,0.5)); }
+  .bnav-label { font-size: 9px; color: var(--white-30); }
+  .bnav-label.active { color: var(--orange); }
+
+  /* ── SETUP ── */
+  .setup-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+  .glass-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; }
+  .glass-card-title { font-size: 11px; font-weight: 700; color: var(--white-60); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label { font-size: 11px; font-weight: 600; color: var(--white-60); }
+  .form-input {
+    background: var(--white-10); border: 1px solid var(--glass-border);
+    border-radius: 10px; padding: 10px 12px;
+    color: var(--white); font-size: 15px; width: 100%; outline: none;
+    backdrop-filter: blur(8px);
+  }
+  .form-input:focus { border-color: var(--orange); }
+  .form-input.placeholder-style { color: var(--white-30); }
+  .form-row { display: flex; gap: 8px; }
+  .form-row .form-group { flex: 1; }
+
+  .photo-upload-box {
+    background: var(--white-10); border: 2px dashed var(--glass-border);
+    border-radius: 14px; padding: 22px; text-align: center; cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .photo-upload-box:hover { border-color: var(--orange); }
+  .photo-upload-icon { font-size: 30px; margin-bottom: 6px; }
+  .photo-upload-title { font-size: 13px; color: var(--white-80); font-weight: 500; }
+  .photo-upload-sub { font-size: 11px; color: var(--white-40); margin-top: 3px; }
+
+  .cta-btn {
+    display: block; width: 100%; padding: 14px;
+    background: var(--orange); border: none; border-radius: 14px;
+    color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,147,64,0.4);
+  }
+  .preset-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; background: var(--white-10); border-radius: 10px;
+    margin-bottom: 6px; border: 1px solid var(--glass-border2);
+  }
+  .preset-name { font-size: 13px; font-weight: 600; color: var(--white-80); }
+  .preset-meta { font-size: 10px; color: var(--white-40); margin-top: 1px; }
+  .preset-load { padding: 5px 12px; border-radius: 20px; background: var(--orange); border: none; color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+  /* ── HOLE ENTRY ── */
+  .entry-header {
+    background: rgba(26,51,34,0.90); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border2);
+    padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 40px; z-index: 50;
+  }
+  .entry-title { font-size: 16px; font-weight: 700; color: var(--white); }
+  .entry-meta { font-size: 11px; color: var(--white-50); margin-top: 2px; }
+  .entry-close {
+    padding: 7px 14px; border-radius: 20px;
+    background: var(--white-10); border: 1px solid var(--glass-border);
+    color: var(--white-80); font-size: 12px; font-weight: 500; cursor: pointer;
+  }
+
+  .field-progress {
+    display: flex; gap: 6px; padding: 10px 14px;
+    background: rgba(255,255,255,0.04); border-bottom: 1px solid var(--glass-border2);
+    align-items: center;
+  }
+  .field-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--white-20); }
+  .field-dot.done { background: var(--orange); }
+  .field-dot.active { background: var(--orange); transform: scale(1.4); box-shadow: 0 0 6px rgba(255,147,64,0.5); }
+  .field-progress-label { margin-left: auto; font-size: 11px; color: var(--white-40); }
+
+  .field-label-strip { padding: 9px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--glass-border2); font-size: 12px; color: var(--white-60); }
+  .field-label-strip span { color: var(--orange); font-weight: 700; }
+
+  .canvas-area {
+    background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    margin: 10px 12px; border-radius: 14px; border: 1px solid var(--glass-border);
+    min-height: 220px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .canvas-hint { color: var(--white-30); font-size: 13px; }
+  .detected-badge {
+    position: absolute; bottom: 8px; right: 8px;
+    background: var(--orange); color: #fff;
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(255,147,64,0.45);
+  }
+  .auto-label { position: absolute; bottom: 8px; left: 8px; font-size: 10px; color: var(--white-30); }
+
+  .val-chips-row {
+    display: flex; gap: 6px; padding: 8px 10px;
+    background: rgba(255,255,255,0.04); border-top: 1px solid var(--glass-border2);
+  }
+  .val-chip {
+    flex: 1; height: 40px; border-radius: 10px;
+    border: 1px solid var(--glass-border2); background: var(--glass-bg2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  }
+  .val-chip.active { border-color: var(--orange); background: rgba(255,147,64,0.12); box-shadow: 0 0 10px rgba(255,147,64,0.2); }
+  .val-chip.set { border-color: rgba(255,147,64,0.5); }
+  .val-chip-label { font-size: 8px; color: var(--white-30); text-transform: uppercase; }
+  .val-chip-val { font-size: 13px; font-weight: 700; color: var(--white-60); }
+  .val-chip.active .val-chip-val { color: var(--orange); }
+  .val-chip.set .val-chip-val { color: var(--orange); }
+
+  .nav-btns {
+    display: flex; gap: 8px; padding: 8px 10px;
+    background: rgba(26,51,34,0.8); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--glass-border2); position: sticky; bottom: 0;
+  }
+  .nav-btn { flex: 1; height: 40px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass-bg2); color: var(--white-60); font-size: 13px; font-weight: 500; cursor: pointer; }
+  .nav-btn.confirm { background: var(--orange); color: #fff; border-color: var(--orange); box-shadow: 0 4px 12px rgba(255,147,64,0.4); }
+
+  /* ── OCR REVIEW ── */
+  .ocr-photo-preview { margin: 10px 14px 0; border-radius: 14px; overflow: hidden; background: var(--glass-bg2); border: 1px solid var(--glass-border2); height: 120px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--white-30); }
+  .ocr-status { margin: 8px 14px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .ocr-status-text { font-size: 13px; font-weight: 600; color: var(--white-80); }
+  .ocr-status-sub { font-size: 10px; color: var(--white-40); margin-top: 1px; }
+  .ocr-conf { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: rgba(100,200,120,0.2); color: #7ee8a2; border: 1px solid rgba(100,200,120,0.3); }
+  .ocr-review-label { padding: 8px 14px 4px; font-size: 10px; color: var(--white-40); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ocr-grid-wrap { overflow-x: auto; padding: 0 14px 0; }
+  .ocr-grid-table { width: 100%; border-collapse: collapse; min-width: 480px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); }
+  .ocr-grid-table th { background: rgba(255,255,255,0.08); color: var(--white-50); font-size: 8px; font-weight: 700; text-transform: uppercase; padding: 6px 4px; border-right: 1px solid var(--glass-border2); text-align: center; }
+  .ocr-grid-table td { border: 1px solid rgba(255,255,255,0.05); padding: 0; text-align: center; }
+  .ocr-hole-lbl { background: rgba(255,255,255,0.06); color: var(--white-40); font-size: 9px; font-weight: 700; padding: 6px 8px; }
+  .ocr-val { display: block; padding: 6px 2px; font-size: 12px; font-weight: 500; color: var(--white-70); }
+  .ocr-val.ok { color: #7ee8a2; }
+  .ocr-val.low { color: #ff8080; background: rgba(255,80,80,0.08); }
+  .ocr-actions { display: flex; gap: 8px; padding: 10px 14px 16px; }
+  .ocr-rescan { flex: 1; padding: 11px; border-radius: 12px; background: var(--glass-bg2); border: 1px solid var(--glass-border2); color: var(--white-60); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .ocr-apply { flex: 2; padding: 11px; border-radius: 12px; background: var(--orange); border: none; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(255,147,64,0.4); }
+
+  /* ── INSIGHT ── */
+  .insight-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+  .insight-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; }
+  .insight-card-header { padding: 10px 14px; border-bottom: 1px solid var(--glass-border2); font-size: 11px; font-weight: 700; color: var(--white-50); text-transform: uppercase; letter-spacing: 0.5px; }
+  .insight-card-body { padding: 14px; }
+  .big-score-row { display: flex; justify-content: space-around; }
+  .big-stat { text-align: center; }
+  .big-stat-val { font-size: 34px; font-weight: 800; color: var(--orange); line-height: 1; text-shadow: 0 0 20px rgba(255,147,64,0.4); }
+  .big-stat-val.white { color: var(--white); text-shadow: none; }
+  .big-stat-label { font-size: 10px; color: var(--white-40); margin-top: 3px; }
+  .stat-bar-row { display: flex; flex-direction: column; gap: 10px; }
+  .stat-bar-item { display: flex; align-items: center; gap: 10px; }
+  .stat-bar-name { font-size: 12px; color: var(--white-50); width: 44px; }
+  .stat-bar-track { flex: 1; height: 6px; background: var(--white-10); border-radius: 3px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; background: var(--orange); border-radius: 3px; box-shadow: 0 0 8px rgba(255,147,64,0.4); }
+  .stat-bar-fill.dim { background: var(--white-30); box-shadow: none; }
+  .stat-bar-pct { font-size: 11px; font-weight: 700; color: var(--white-70); width: 60px; text-align: right; }
+  .stroke-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--glass-bg2); border-radius: 8px; border: 1px solid var(--glass-border2); margin-bottom: 5px; }
+  .stroke-item.bad { border-left: 3px solid rgba(220,80,80,0.7); }
+  .stroke-item.good { border-left: 3px solid var(--orange); }
+  .stroke-label { flex: 1; font-size: 12px; color: var(--white-70); }
+  .stroke-val { font-size: 13px; font-weight: 700; color: rgba(220,100,100,0.9); }
+  .stroke-val.pos { color: var(--orange); }
+  .priority-item { display: flex; gap: 8px; padding: 10px 12px; background: rgba(255,147,64,0.08); border-radius: 10px; border: 1px solid rgba(255,147,64,0.2); margin-bottom: 6px; }
+  .priority-num { font-size: 14px; font-weight: 800; color: var(--orange); min-width: 18px; }
+  .priority-text { font-size: 12px; color: var(--white-80); line-height: 1.4; }
+  .priority-sub { font-size: 10px; color: var(--white-40); margin-top: 2px; }
+
+  /* ── REFLECTION ── */
+  .reflect-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+  .reflect-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 14px; padding: 14px; }
+  .reflect-q-label { font-size: 14px; font-weight: 600; color: var(--white-80); margin-bottom: 8px; line-height: 1.4; }
+  .reflect-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .reflect-opt { padding: 7px 14px; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg2); color: var(--white-50); font-size: 12px; cursor: pointer; }
+  .reflect-opt.selected { border-color: var(--orange); background: rgba(255,147,64,0.15); color: var(--orange); font-weight: 600; box-shadow: 0 0 8px rgba(255,147,64,0.2); }
+  .reflect-opt.multi { border-color: var(--orange); background: rgba(255,147,64,0.12); color: var(--orange); font-weight: 600; }
+  .reflect-textarea-display { background: var(--glass-bg2); border: 1px solid var(--glass-border2); border-radius: 10px; padding: 10px 12px; color: var(--white-70); font-size: 13px; margin-top: 6px; min-height: 40px; display: flex; align-items: center; }
+  .progress-bar { background: var(--white-10); height: 3px; border-radius: 2px; overflow: hidden; margin: 6px 14px 0; }
+  .progress-fill { height: 100%; background: var(--orange); border-radius: 2px; box-shadow: 0 0 8px rgba(255,147,64,0.5); }
+  .progress-meta { display: flex; justify-content: space-between; padding: 4px 14px 0; font-size: 10px; color: var(--white-40); }
+
+  /* ── CLUBS ── */
+  .club-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 14px; }
+  .club-card { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; cursor: pointer; transition: border-color 0.15s; }
+  .club-card:hover { border-color: var(--white-40); }
+  .club-card.inconsistent { border-color: rgba(255,147,64,0.6); box-shadow: 0 0 12px rgba(255,147,64,0.1); }
+  .club-card.reliable { border-color: rgba(100,200,130,0.5); box-shadow: 0 0 12px rgba(100,200,130,0.08); }
+  .club-card.needs-dist { border-color: rgba(220,80,80,0.5); }
+  .club-name { font-size: 13px; font-weight: 700; color: var(--white-90); }
+  .club-spec { font-size: 10px; color: var(--white-40); margin-top: 1px; }
+  .club-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 7px; display: inline-block; text-transform: uppercase; letter-spacing: 0.3px; }
+  .badge-normal { background: var(--white-10); color: var(--white-40); }
+  .badge-inconsistent { background: rgba(255,147,64,0.15); color: var(--orange); border: 1px solid rgba(255,147,64,0.3); }
+  .badge-reliable { background: rgba(100,200,130,0.15); color: #7ee8a2; border: 1px solid rgba(100,200,130,0.3); }
+  .badge-needs { background: rgba(220,80,80,0.12); color: rgba(220,100,100,0.9); border: 1px solid rgba(220,80,80,0.25); }
+  .club-miss { font-size: 10px; color: var(--white-30); margin-top: 3px; }
+  .club-legend { display: flex; gap: 12px; padding: 0 14px 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--white-40); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="screen-selector">
+  <button class="screen-btn active" onclick="showScreen('scorecard',this)">1 · Scorecard</button>
+  <button class="screen-btn" onclick="showScreen('setup',this)">2 · Setup</button>
+  <button class="screen-btn" onclick="showScreen('entry',this)">3 · Hole Entry</button>
+  <button class="screen-btn" onclick="showScreen('ocr',this)">4 · OCR Review</button>
+  <button class="screen-btn" onclick="showScreen('insight',this)">5 · Insight</button>
+  <button class="screen-btn" onclick="showScreen('reflect',this)">6 · Reflection</button>
+  <button class="screen-btn" onclick="showScreen('clubs',this)">7 · Clubs</button>
+</div>
+
+<!-- ══ SCREEN 1: SCORECARD ══ -->
+<div id="screen-scorecard" class="screen visible">
+  <div class="topbar">
+    <div>
+      <div class="topbar-course">Pebble Beach GL</div>
+      <div class="topbar-meta">White Tees · 6,828 yds · May 15, 2026</div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn">⬆ Export</button>
+      <button class="icon-btn accent">📊</button>
+    </div>
+  </div>
+
+  <!-- big hero -->
+  <div class="hero-section">
+    <div class="hero-glass">
+      <div class="hero-top">
+        <div class="hero-course">Pebble Beach Golf Links</div>
+        <div class="hero-thru">Thru 18</div>
+      </div>
+      <div class="hero-main">
+        <div>
+          <div class="hero-score">74</div>
+          <div style="font-size:12px;color:var(--white-40);margin-top:3px">Gross Score</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;margin-left:auto">
+          <div class="hero-to-par">+3</div>
+          <div class="hero-par-label">vs Par</div>
+        </div>
+      </div>
+      <div class="hero-chips">
+        <div class="hero-chip"><span class="hero-chip-val orange">64%</span><span class="hero-chip-label">FIR</span></div>
+        <div class="hero-chip"><span class="hero-chip-val orange">50%</span><span class="hero-chip-label">GIR</span></div>
+        <div class="hero-chip"><span class="hero-chip-val">2.1</span><span class="hero-chip-label">Putts</span></div>
+        <div class="hero-chip"><span class="hero-chip-val orange">2</span><span class="hero-chip-label">Birdies</span></div>
+        <div class="hero-chip"><span class="hero-chip-val orange">1</span><span class="hero-chip-label">Eagle</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">Scorecard</div>
+    <div class="tab">Stats</div>
+    <div class="tab">Hole Map</div>
+  </div>
+
+  <div class="section-header">Front 9</div>
+  <div class="scorecard-wrap">
+    <table class="scorecard-table">
+      <thead><tr>
+        <th>HOLE</th><th>YDS</th><th>PAR</th><th>FIR</th><th>GIR</th><th>PUTTS</th>
+        <th class="col-score">SCORE</th><th>+/−</th><th>U/D</th><th>S/S</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="hole-num-c">1</td><td class="yards-c">374</td><td class="par-c">4</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td class="stat-hit" style="color:var(--orange)">1</td><td class="score-c"><span class="sym-birdie" style="width:22px;height:22px;font-size:10px">3</span></td><td class="delta-under">−1</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">2</td><td class="yards-c">502</td><td class="par-c">5</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td class="stat-hit" style="color:var(--orange)">1</td><td class="score-c"><span class="sym-eagle" style="width:20px;height:20px;font-size:10px">3</span></td><td class="delta-under">−2</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">3</td><td class="yards-c">183</td><td class="par-c">3</td><td class="stat-na">—</td><td class="stat-hit">✓</td><td class="stat-hit" style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">3</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">4</td><td class="yards-c">416</td><td class="par-c">4</td><td class="stat-miss">✗</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">5</span></td><td class="delta-over">+1</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">5</td><td class="yards-c">388</td><td class="par-c">4</td><td class="stat-miss">✗</td><td class="stat-miss">✗</td><td style="color:var(--orange)">3</td><td class="score-c"><span class="sym-double" style="width:20px;height:20px;font-size:10px">6</span></td><td class="delta-over">+2</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">6</td><td class="yards-c">442</td><td class="par-c">4</td><td class="stat-hit">✓</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">4</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td class="stat-hit">✓</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">7</td><td class="yards-c">107</td><td class="par-c">3</td><td class="stat-na">—</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">4</span></td><td class="delta-over">+1</td><td class="stat-hit">✓</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">8</td><td class="yards-c">431</td><td class="par-c">4</td><td class="stat-miss">✗</td><td class="stat-miss">✗</td><td style="color:var(--orange)">3</td><td class="score-c"><span class="sym-triple" style="width:22px;height:22px;font-size:10px">7</span></td><td class="delta-over">+3</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">9</td><td class="yards-c">481</td><td class="par-c">5</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-birdie" style="width:22px;height:22px;font-size:10px">4</span></td><td class="delta-under">−1</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr class="subtotal-r"><td>OUT</td><td>3324</td><td>36</td><td style="color:var(--orange)">5/8</td><td style="color:var(--orange)">5/9</td><td style="color:var(--orange)">18</td><td class="sub-score">33</td><td class="delta-under">−3</td><td style="color:var(--orange)">2/4</td><td style="color:var(--white-20)">0/0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-header">Back 9</div>
+  <div class="scorecard-wrap">
+    <table class="scorecard-table">
+      <thead><tr><th>HOLE</th><th>YDS</th><th>PAR</th><th>FIR</th><th>GIR</th><th>PUTTS</th><th class="col-score">SCORE</th><th>+/−</th><th>U/D</th><th>S/S</th></tr></thead>
+      <tbody>
+        <tr><td class="hole-num-c">10</td><td class="yards-c">408</td><td class="par-c">4</td><td class="stat-hit">✓</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">5</span></td><td class="delta-over">+1</td><td class="stat-hit">✓</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">11</td><td class="yards-c">390</td><td class="par-c">4</td><td class="stat-miss">✗</td><td class="stat-miss">✗</td><td style="color:var(--orange)">3</td><td class="score-c"><span class="sym-double" style="width:20px;height:20px;font-size:10px">6</span></td><td class="delta-over">+2</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">12</td><td class="yards-c">202</td><td class="par-c">3</td><td class="stat-na">—</td><td class="stat-hit">✓</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">3</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">13</td><td class="yards-c">445</td><td class="par-c">4</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">4</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">14</td><td class="yards-c">565</td><td class="par-c">5</td><td class="stat-miss">✗</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">6</span></td><td class="delta-over">+1</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">15</td><td class="yards-c">397</td><td class="par-c">4</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">4</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">16</td><td class="yards-c">188</td><td class="par-c">3</td><td class="stat-na">—</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">4</span></td><td class="delta-over">+1</td><td class="stat-miss">✗</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">17</td><td class="yards-c">216</td><td class="par-c">3</td><td class="stat-na">—</td><td class="stat-miss">✗</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-bogey" style="width:22px;height:22px;font-size:10px">4</span></td><td class="delta-over">+1</td><td class="stat-hit">✓</td><td style="color:var(--white-20)">—</td></tr>
+        <tr><td class="hole-num-c">18</td><td class="yards-c">543</td><td class="par-c">5</td><td class="stat-hit">✓</td><td class="stat-hit">✓</td><td style="color:var(--orange)">2</td><td class="score-c"><span class="sym-par">5</span></td><td class="delta-even" style="color:var(--white-30)">E</td><td style="color:var(--white-20)">—</td><td style="color:var(--white-20)">—</td></tr>
+        <tr class="subtotal-r"><td>IN</td><td>3354</td><td>35</td><td style="color:var(--orange)">4/6</td><td style="color:var(--orange)">4/9</td><td style="color:var(--orange)">19</td><td class="sub-score">41</td><td class="delta-over">+6</td><td style="color:var(--orange)">2/5</td><td style="color:var(--white-20)">0/0</td></tr>
+        <tr class="total-r"><td style="color:var(--orange);font-weight:700;font-size:10px;text-transform:uppercase">TOTAL</td><td style="color:var(--white-40)">6678</td><td style="color:var(--white-40)">71</td><td style="color:var(--orange);font-weight:700">9/14</td><td style="color:var(--orange);font-weight:700">9/18</td><td style="color:var(--orange);font-weight:700">37</td><td class="tot-score">74</td><td class="delta-over" style="font-size:14px">+3</td><td style="color:var(--orange);font-weight:700">4/9</td><td style="color:var(--white-20)">0/0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="bnav-item"><div class="bnav-icon active">⛳</div><div class="bnav-label active">Scorecard</div></div>
+    <div class="bnav-item"><div class="bnav-icon">📊</div><div class="bnav-label">Insight</div></div>
+    <div class="bnav-item"><div class="bnav-icon">🏌️</div><div class="bnav-label">Clubs</div></div>
+    <div class="bnav-item"><div class="bnav-icon">💭</div><div class="bnav-label">Reflect</div></div>
+    <div class="bnav-item"><div class="bnav-icon">⚙️</div><div class="bnav-label">Settings</div></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: SETUP ══ -->
+<div id="screen-setup" class="screen">
+  <div class="topbar"><div><div class="topbar-course">New Round</div><div class="topbar-meta">Course Setup</div></div></div>
+  <div class="setup-body">
+    <div class="glass-card">
+      <div class="glass-card-title">Saved Courses</div>
+      <div class="preset-item"><div><div class="preset-name">Pebble Beach GL</div><div class="preset-meta">White Tees · 6,828 yds</div></div><button class="preset-load">Load</button></div>
+      <div class="preset-item"><div><div class="preset-name">Spyglass Hill</div><div class="preset-meta">Blue Tees · 6,960 yds</div></div><button class="preset-load">Load</button></div>
+    </div>
+    <div class="glass-card">
+      <div class="glass-card-title">New Course</div>
+      <div class="form-group"><div class="form-label">Course Name</div><div class="form-input placeholder-style">e.g. Pebble Beach Golf Links</div></div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Tee Name</div><div class="form-input placeholder-style">White</div></div>
+        <div class="form-group"><div class="form-label">Distance (yds)</div><div class="form-input placeholder-style">6828</div></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">Date</div><div class="form-input" style="color:var(--white-80)">May 15, 2026</div></div>
+        <div class="form-group"><div class="form-label">Player Name</div><div class="form-input placeholder-style">Optional</div></div>
+      </div>
+    </div>
+    <div class="glass-card">
+      <div class="glass-card-title">Import Hole Data (OCR)</div>
+      <div class="photo-upload-box"><div class="photo-upload-icon">📷</div><div class="photo-upload-title">Photo paper scorecard</div><div class="photo-upload-sub">OCR extracts yardages + par — review before applying</div></div>
+    </div>
+    <button class="cta-btn">Start Round →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: HOLE ENTRY ══ -->
+<div id="screen-entry" class="screen">
+  <div class="entry-header"><div><div class="entry-title">Hole 4 · Par 4 · 416 yds</div><div class="entry-meta">Long-press canvas to clear</div></div><button class="entry-close">Scorecard</button></div>
+  <div class="field-progress">
+    <div class="field-dot done"></div><div class="field-dot done"></div>
+    <div class="field-dot active"></div><div class="field-dot"></div>
+    <div class="field-dot"></div><div class="field-dot"></div>
+    <div class="field-progress-label">Field 3 of 6 · PUTTS</div>
+  </div>
+  <div class="field-label-strip">Draw: <span>number of putts</span></div>
+  <div class="canvas-area">
+    <svg width="110" height="150" viewBox="0 0 110 150" fill="none"><path d="M28 48 Q28 18 55 18 Q82 18 82 48 Q82 78 28 118 L82 118" stroke="#FF9340" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <div class="detected-badge">Detected: 2 Putts</div>
+    <div class="auto-label">auto-advancing…</div>
+  </div>
+  <div class="val-chips-row">
+    <div class="val-chip set"><div class="val-chip-label">FIR</div><div class="val-chip-val">✗</div></div>
+    <div class="val-chip set"><div class="val-chip-label">GIR</div><div class="val-chip-val">✗</div></div>
+    <div class="val-chip active"><div class="val-chip-label">PUTTS</div><div class="val-chip-val">2</div></div>
+    <div class="val-chip"><div class="val-chip-label">SCORE</div><div class="val-chip-val" style="color:var(--white-20)">?</div></div>
+    <div class="val-chip"><div class="val-chip-label">U/D</div><div class="val-chip-val" style="color:var(--white-20)">?</div></div>
+    <div class="val-chip"><div class="val-chip-label">S/S</div><div class="val-chip-val" style="color:var(--white-20)">?</div></div>
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn">← Back</button><button class="nav-btn" style="font-size:11px">Skip</button><button class="nav-btn confirm">Confirm →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 4: OCR REVIEW ══ -->
+<div id="screen-ocr" class="screen">
+  <div class="topbar"><div><div class="topbar-course">OCR Review</div><div class="topbar-meta">Correct errors before applying</div></div><button class="icon-btn">Re-scan</button></div>
+  <div class="ocr-photo-preview">📷 Paper scorecard photo</div>
+  <div class="ocr-status">
+    <div style="font-size:18px">✅</div>
+    <div><div class="ocr-status-text">OCR Complete</div><div class="ocr-status-sub">18 holes · 3 low-confidence values</div></div>
+    <div class="ocr-conf">87% conf.</div>
+  </div>
+  <div class="ocr-review-label">Front 9</div>
+  <div class="ocr-grid-wrap">
+    <table class="ocr-grid-table">
+      <thead><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>OUT</th></tr></thead>
+      <tbody>
+        <tr><td class="ocr-hole-lbl">YDS</td><td><span class="ocr-val ok">374</span></td><td><span class="ocr-val ok">502</span></td><td><span class="ocr-val ok">183</span></td><td><span class="ocr-val low">416⚠</span></td><td><span class="ocr-val ok">388</span></td><td><span class="ocr-val ok">442</span></td><td><span class="ocr-val ok">107</span></td><td><span class="ocr-val low">131⚠</span></td><td><span class="ocr-val ok">481</span></td><td style="background:rgba(255,255,255,0.05);padding:5px;font-size:10px;color:var(--white-40)">3324</td></tr>
+        <tr><td class="ocr-hole-lbl">PAR</td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">5</span></td><td><span class="ocr-val ok">3</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">3</span></td><td><span class="ocr-val low">5⚠</span></td><td><span class="ocr-val ok">5</span></td><td style="background:rgba(255,255,255,0.05);padding:5px;font-size:10px;font-weight:700;color:var(--orange)">36</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ocr-review-label" style="margin-top:8px">Back 9</div>
+  <div class="ocr-grid-wrap">
+    <table class="ocr-grid-table">
+      <thead><tr><th></th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>IN</th></tr></thead>
+      <tbody>
+        <tr><td class="ocr-hole-lbl">YDS</td><td><span class="ocr-val ok">408</span></td><td><span class="ocr-val ok">390</span></td><td><span class="ocr-val ok">202</span></td><td><span class="ocr-val ok">445</span></td><td><span class="ocr-val ok">565</span></td><td><span class="ocr-val ok">397</span></td><td><span class="ocr-val ok">188</span></td><td><span class="ocr-val ok">216</span></td><td><span class="ocr-val ok">543</span></td><td style="background:rgba(255,255,255,0.05);padding:5px;font-size:10px;color:var(--white-40)">3354</td></tr>
+        <tr><td class="ocr-hole-lbl">PAR</td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">3</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">5</span></td><td><span class="ocr-val ok">4</span></td><td><span class="ocr-val ok">3</span></td><td><span class="ocr-val ok">3</span></td><td><span class="ocr-val ok">5</span></td><td style="background:rgba(255,255,255,0.05);padding:5px;font-size:10px;font-weight:700;color:var(--orange)">35</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ocr-actions"><button class="ocr-rescan">🔄 Re-scan</button><button class="ocr-apply">Apply to Round →</button></div>
+</div>
+
+<!-- ══ SCREEN 5: INSIGHT ══ -->
+<div id="screen-insight" class="screen">
+  <div class="topbar"><div><div class="topbar-course">Round Insight</div><div class="topbar-meta">Pebble Beach · May 15 · +3</div></div><button class="icon-btn">⬆ Export</button></div>
+  <div class="insight-body">
+    <div class="insight-card">
+      <div class="insight-card-header">Round Summary</div>
+      <div class="insight-card-body">
+        <div class="big-score-row">
+          <div class="big-stat"><div class="big-stat-val white">74</div><div class="big-stat-label">Score</div></div>
+          <div class="big-stat"><div class="big-stat-val">+3</div><div class="big-stat-label">vs Par</div></div>
+          <div class="big-stat"><div class="big-stat-val">2</div><div class="big-stat-label">Birdies</div></div>
+          <div class="big-stat"><div class="big-stat-val">1</div><div class="big-stat-label">Eagle</div></div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <div style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700">38</div><div style="font-size:9px;color:var(--white-40);margin-top:1px">Front (−3)</div></div>
+          <div style="flex:1;background:rgba(255,147,64,0.1);border:1px solid rgba(255,147,64,0.25);border-radius:10px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--orange)">41</div><div style="font-size:9px;color:var(--white-40);margin-top:1px">Back (+6)</div></div>
+          <div style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700">4</div><div style="font-size:9px;color:var(--white-40);margin-top:1px">Bogeys</div></div>
+          <div style="flex:1;background:rgba(220,80,80,0.08);border:1px solid rgba(220,80,80,0.2);border-radius:10px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700;color:rgba(220,100,100,0.9)">2</div><div style="font-size:9px;color:var(--white-40);margin-top:1px">Doubles+</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-card-header">Stat Percentages</div>
+      <div class="insight-card-body">
+        <div class="stat-bar-row">
+          <div class="stat-bar-item"><div class="stat-bar-name">FIR</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:64%"></div></div><div class="stat-bar-pct">64% (9/14)</div></div>
+          <div class="stat-bar-item"><div class="stat-bar-name">GIR</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:50%"></div></div><div class="stat-bar-pct">50% (9/18)</div></div>
+          <div class="stat-bar-item"><div class="stat-bar-name">Putts</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:75%"></div></div><div class="stat-bar-pct">2.06 avg</div></div>
+          <div class="stat-bar-item"><div class="stat-bar-name">U/D</div><div class="stat-bar-track"><div class="stat-bar-fill dim" style="width:44%"></div></div><div class="stat-bar-pct">44% (4/9)</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-card-header">Where Strokes Were Lost</div>
+      <div class="insight-card-body">
+        <div class="stroke-item bad"><div class="stroke-label">Short game (GIR miss + U/D fail)</div><div class="stroke-val">+5</div></div>
+        <div class="stroke-item bad"><div class="stroke-label">Approach / GIR (missed greens)</div><div class="stroke-val">+3</div></div>
+        <div class="stroke-item bad"><div class="stroke-label">Tee shot (fairways missed)</div><div class="stroke-val">+2</div></div>
+        <div class="stroke-item good"><div class="stroke-label">Strokes gained (birdies/eagle)</div><div class="stroke-val pos">−8</div></div>
+      </div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-card-header">Priority Work List</div>
+      <div class="insight-card-body">
+        <div class="priority-item"><div class="priority-num">1</div><div><div class="priority-text">Short game: chip/pitch conversion</div><div class="priority-sub">5 strokes lost · 44% U/D rate</div></div></div>
+        <div class="priority-item"><div class="priority-num">2</div><div><div class="priority-text">Iron accuracy — GIR only 50%</div><div class="priority-sub">3 strokes lost approach</div></div></div>
+        <div class="priority-item"><div class="priority-num">3</div><div><div class="priority-text">Driver — right miss on 5 holes</div><div class="priority-sub">2 strokes from position</div></div></div>
+      </div>
+    </div>
+    <button class="cta-btn" style="margin-bottom:20px">Post-Round Reflection →</button>
+  </div>
+  <div class="bottom-nav">
+    <div class="bnav-item"><div class="bnav-icon">⛳</div><div class="bnav-label">Scorecard</div></div>
+    <div class="bnav-item"><div class="bnav-icon active">📊</div><div class="bnav-label active">Insight</div></div>
+    <div class="bnav-item"><div class="bnav-icon">🏌️</div><div class="bnav-label">Clubs</div></div>
+    <div class="bnav-item"><div class="bnav-icon">💭</div><div class="bnav-label">Reflect</div></div>
+    <div class="bnav-item"><div class="bnav-icon">⚙️</div><div class="bnav-label">Settings</div></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 6: REFLECTION ══ -->
+<div id="screen-reflect" class="screen">
+  <div class="topbar"><div><div class="topbar-course">Post-Round Reflection</div><div class="topbar-meta">Pebble Beach · May 15</div></div><button class="icon-btn">Skip</button></div>
+  <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+  <div class="progress-meta"><span>Question 3 of 7</span><span style="color:var(--orange)">40%</span></div>
+  <div class="reflect-body">
+    <div class="reflect-card">
+      <div class="reflect-q-label">1. Driver miss today?</div>
+      <div class="reflect-opts">
+        <div class="reflect-opt">Straight</div><div class="reflect-opt selected">Block right</div>
+        <div class="reflect-opt">Pull left</div><div class="reflect-opt">Push fade</div>
+        <div class="reflect-opt">Duck hook</div><div class="reflect-opt">No pattern</div>
+      </div>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q-label">2. Iron/approach miss shape?</div>
+      <div class="reflect-opts">
+        <div class="reflect-opt multi">Thin</div><div class="reflect-opt multi">Short</div>
+        <div class="reflect-opt">Fat</div><div class="reflect-opt">Right</div>
+        <div class="reflect-opt">Left</div><div class="reflect-opt">Clean contact</div>
+      </div>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q-label">3. Short game miss pattern?</div>
+      <div class="reflect-opts">
+        <div class="reflect-opt selected">Thin — running through</div>
+        <div class="reflect-opt">Fat — comes up short</div>
+        <div class="reflect-opt">Solid today</div>
+      </div>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q-label">5. Swing thought that helped?</div>
+      <div class="reflect-textarea-display">Stay behind it through impact</div>
+    </div>
+    <div class="reflect-card">
+      <div class="reflect-q-label">7. Top practice priority?</div>
+      <div class="reflect-opts">
+        <div class="reflect-opt selected">Short game 50–80yd wedges</div>
+        <div class="reflect-opt">Driver shape</div>
+        <div class="reflect-opt">Mid-iron GIR</div>
+        <div class="reflect-opt">Putting speed</div>
+      </div>
+    </div>
+    <button class="cta-btn" style="margin-bottom:20px">Save Reflection →</button>
+  </div>
+  <div class="bottom-nav">
+    <div class="bnav-item"><div class="bnav-icon">⛳</div><div class="bnav-label">Scorecard</div></div>
+    <div class="bnav-item"><div class="bnav-icon">📊</div><div class="bnav-label">Insight</div></div>
+    <div class="bnav-item"><div class="bnav-icon">🏌️</div><div class="bnav-label">Clubs</div></div>
+    <div class="bnav-item"><div class="bnav-icon active">💭</div><div class="bnav-label active">Reflect</div></div>
+    <div class="bnav-item"><div class="bnav-icon">⚙️</div><div class="bnav-label">Settings</div></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 7: CLUBS ══ -->
+<div id="screen-clubs" class="screen">
+  <div class="topbar"><div><div class="topbar-course">14-Club Map</div><div class="topbar-meta">Tap to view / edit details</div></div><button class="icon-btn accent">+ Club</button></div>
+  <div class="club-grid">
+    <div class="club-card inconsistent"><div class="club-name">Driver</div><div class="club-spec">Titleist GT2 9°</div><div class="club-badge badge-inconsistent">⚠ Inconsistent</div><div class="club-miss">Miss: Block right</div></div>
+    <div class="club-card reliable"><div class="club-name">3 Wood</div><div class="club-spec">TaylorMade Qi35</div><div class="club-badge badge-reliable">✓ Reliable</div><div class="club-miss">245 avg carry</div></div>
+    <div class="club-card"><div class="club-name">7 Wood</div><div class="club-spec">TaylorMade Qi10</div><div class="club-badge badge-normal">Normal</div><div class="club-miss">210 avg carry</div></div>
+    <div class="club-card"><div class="club-name">4 Iron</div><div class="club-spec">TaylorMade P790</div><div class="club-badge badge-normal">Normal</div><div class="club-miss">195 avg carry</div></div>
+    <div class="club-card inconsistent"><div class="club-name">5–9 Iron</div><div class="club-spec">TaylorMade P770</div><div class="club-badge badge-inconsistent">⚠ Inconsistent</div><div class="club-miss">Miss: thin / heavy</div></div>
+    <div class="club-card"><div class="club-name">PW</div><div class="club-spec">TaylorMade P770</div><div class="club-badge badge-normal">Normal</div><div class="club-miss">130 avg carry</div></div>
+    <div class="club-card"><div class="club-name">50° GW</div><div class="club-spec">TaylorMade MG4</div><div class="club-badge badge-normal">Normal</div><div class="club-miss">110 avg carry</div></div>
+    <div class="club-card reliable"><div class="club-name">54° SW</div><div class="club-spec">Vokey SM11 M</div><div class="club-badge badge-reliable">✓ Reliable</div><div class="club-miss">90 avg carry</div></div>
+    <div class="club-card needs-dist"><div class="club-name">58° LW</div><div class="club-spec">Vokey SM11 T</div><div class="club-badge badge-needs">↑ Needs distance</div><div class="club-miss">Miss: short / thin</div></div>
+    <div class="club-card reliable"><div class="club-name">Putter</div><div class="club-spec">Scotty Fastback 2.5</div><div class="club-badge badge-reliable">✓ Reliable</div><div class="club-miss">2.06 putts avg</div></div>
+  </div>
+  <div class="club-legend">
+    <div class="legend-item"><div class="legend-dot" style="border:1px solid rgba(255,147,64,0.6)"></div>Inconsistent</div>
+    <div class="legend-item"><div class="legend-dot" style="border:1px solid rgba(100,200,130,0.5)"></div>Reliable</div>
+    <div class="legend-item"><div class="legend-dot" style="border:1px solid rgba(255,255,255,0.2)"></div>Normal</div>
+    <div class="legend-item"><div class="legend-dot" style="border:1px solid rgba(220,80,80,0.5)"></div>Needs distance</div>
+  </div>
+  <div class="bottom-nav">
+    <div class="bnav-item"><div class="bnav-icon">⛳</div><div class="bnav-label">Scorecard</div></div>
+    <div class="bnav-item"><div class="bnav-icon">📊</div><div class="bnav-label">Insight</div></div>
+    <div class="bnav-item"><div class="bnav-icon active">🏌️</div><div class="bnav-label active">Clubs</div></div>
+    <div class="bnav-item"><div class="bnav-icon">💭</div><div class="bnav-label">Reflect</div></div>
+    <div class="bnav-item"><div class="bnav-icon">⚙️</div><div class="bnav-label">Settings</div></div>
+  </div>
+</div>
+
+<script>
+function showScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.screen-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('visible');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
