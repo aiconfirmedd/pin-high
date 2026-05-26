@@ -201,6 +201,71 @@ input, textarea {
 }
 
 /* ============================================================
+   SCREEN HEADER — standardized back-nav bar
+   ============================================================ */
+
+.screen-header {
+  height: 56px;
+  background: var(--topbar);
+  border-bottom: 1px solid var(--grid);
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.screen-header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.2px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: none;
+  border: none;
+  color: var(--orange);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: opacity 0.15s;
+}
+
+.back-btn:active {
+  opacity: 0.6;
+}
+
+.back-btn-chevron {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -1px;
+}
+
+.screen-header-action {
+  margin-left: auto;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 12px;
+}
+
+/* ============================================================
    BOTTOM NAV
    ============================================================ */
 
@@ -209,10 +274,10 @@ input, textarea {
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--grid);
   display: flex;
-  align-items: center;
-  height: calc(60px + env(safe-area-inset-bottom));
+  align-items: stretch;
+  height: calc(64px + env(safe-area-inset-bottom));
   flex-shrink: 0;
-  padding: 0 4px env(safe-area-inset-bottom);
+  padding: 0 0 env(safe-area-inset-bottom);
 }
 
 .bnav-item {
@@ -221,30 +286,44 @@ input, textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   color: var(--muted);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 2px;
-  border-radius: 8px;
+  padding: 8px 2px 6px;
+  border-radius: 0;
   transition: color 0.15s;
+  position: relative;
 }
 
 .bnav-item.bnav-active {
   color: var(--orange);
 }
 
+/* Orange indicator pill at top of active tab */
+.bnav-item.bnav-active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--orange);
+}
+
 .bnav-icon {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1;
 }
 
 .bnav-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
 }
 
 /* ============================================================

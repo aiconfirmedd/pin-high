@@ -553,37 +553,21 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
     }}>
 
       {/* ── Top bar ── */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "12px 16px 8px",
-        background: "linear-gradient(180deg,#1E1E20 0%,#111111 100%)",
-        borderBottom: "1px solid #2E2E2E",
-        flexShrink: 0,
-      }}>
-        <button onClick={onClose} style={{
-          background: "none", border: "none", color: "#8E8E93",
-          fontSize: 22, cursor: "pointer", padding: "4px 8px",
-        }}>‹</button>
-
-        <div style={{ textAlign: "center" }}>
-          <div style={{
-            fontFamily: "'Oswald', sans-serif",
-            fontSize: 18, fontWeight: 700, letterSpacing: "0.08em",
-            background: "linear-gradient(135deg,#FF9340 0%,#E87722 50%,#B85B14 100%)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          }}>CADDIE MODE</div>
-          <div style={{ color: "#8E8E93", fontSize: 11 }}>
-            Hole {hole.number} · Par {hole.par} · {hole.yardage.white}y
+      <div className="screen-header" style={{ background: "#111111", borderBottomColor: "#2E2E2E" }}>
+        <button className="back-btn" onClick={onClose}>
+          <span className="back-btn-chevron">‹</span>
+          <span>Back</span>
+        </button>
+        <span className="screen-header-title">Caddie Mode</span>
+        <div className="screen-header-action">
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+            <div style={{
+              width: 8, height: 8, borderRadius: "50%",
+              background: gpsPos ? "#3DAA45" : gpsError ? "#E05555" : "#D4C44A",
+              boxShadow: gpsPos ? "0 0 6px #3DAA45" : "none",
+            }} />
+            <div style={{ color: "#666", fontSize: 9 }}>{gpsPos ? "GPS ✓" : gpsError ? "No GPS" : "…"}</div>
           </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
-          <div style={{
-            width: 8, height: 8, borderRadius: "50%",
-            background: gpsPos ? "#3DAA45" : gpsError ? "#E05555" : "#D4C44A",
-            boxShadow: gpsPos ? "0 0 6px #3DAA45" : "none",
-          }} />
-          <div style={{ color: "#48484A", fontSize: 9 }}>{gpsPos ? "GPS ✓" : gpsError ? "No GPS" : "Locating…"}</div>
         </div>
       </div>
 

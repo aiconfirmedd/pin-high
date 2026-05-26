@@ -111,12 +111,15 @@ export default function PostRoundReflection({ round, onSave, onBack }: Props) {
 
   return (
     <div style={{ paddingBottom: 100 }}>
-      <div className="topbar">
-        <button className="icon-btn" onClick={onBack}>← Back</button>
-        <div style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ color: "var(--white)", fontWeight: 700 }}>Post-Round Reflection</div>
+      <div className="screen-header">
+        <button className="back-btn" onClick={onBack}>
+          <span className="back-btn-chevron">‹</span>
+          <span>Back</span>
+        </button>
+        <span className="screen-header-title">Reflection</span>
+        <div className="screen-header-action">
+          <button className="back-btn" style={{ color: "var(--sec)", fontSize: 13 }} onClick={handleSave}>Skip</button>
         </div>
-        <button className="ghost-btn" onClick={handleSave}>Skip All</button>
       </div>
 
       {/* Progress bar */}

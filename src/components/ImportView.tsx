@@ -109,17 +109,13 @@ export default function ImportView({ onImportComplete, onClose }: Props) {
   if (step === "choose") {
     return (
       <div style={{ padding: "24px 16px", maxWidth: 520, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-          <button
-            onClick={onClose}
-            style={{ background: "none", border: "none", color: "var(--sec)", cursor: "pointer", fontSize: 22, padding: 4, lineHeight: 1 }}
-          >
-            &#8592;
+        <div className="screen-header" style={{ margin: "-24px -16px 24px", width: "calc(100% + 32px)" }}>
+          <button className="back-btn" onClick={onClose}>
+            <span className="back-btn-chevron">‹</span>
+            <span>Back</span>
           </button>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--white)" }}>Import from 18Birdies</div>
-            <div style={{ color: "var(--sec)", fontSize: 13, marginTop: 2 }}>Bring your rounds into Pin High</div>
-          </div>
+          <span className="screen-header-title">Import from 18Birdies</span>
+          <div className="screen-header-action" />
         </div>
 
         <div className="card" style={{ marginBottom: 16 }}>

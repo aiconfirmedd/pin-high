@@ -43,13 +43,15 @@ export default function RoundInsightView({ round, clubs, onReflect, onBack }: Pr
   return (
     <div style={{ paddingBottom: 100 }}>
       {/* Topbar */}
-      <div className="topbar">
-        <button className="icon-btn" onClick={onBack}>← Back</button>
-        <div style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ color: "var(--white)", fontWeight: 700, fontSize: 16 }}>Round Insight</div>
-          <div style={{ color: "var(--sec)", fontSize: 12 }}>{round.courseName}</div>
+      <div className="screen-header">
+        <button className="back-btn" onClick={onBack}>
+          <span className="back-btn-chevron">‹</span>
+          <span>Back</span>
+        </button>
+        <span className="screen-header-title">Round Insight</span>
+        <div className="screen-header-action">
+          <ExportControls targetId="insight-export" filename="round-insight.pdf" />
         </div>
-        <ExportControls targetId="insight-export" filename="round-insight.pdf" />
       </div>
 
       <div id="insight-export" style={{ padding: 16 }}>

@@ -110,19 +110,19 @@ export default function GuidedHoleEntry({ round, holeIndex, onSave, onClose }: P
       display: "flex", flexDirection: "column"
     }}>
       {/* Header */}
-      <div style={{
-        padding: "16px 20px", background: "var(--topbar)",
-        display: "flex", alignItems: "center", justifyContent: "space-between"
-      }}>
-        <div>
-          <div style={{ color: "var(--white)", fontWeight: 700, fontSize: 18 }}>
-            Hole {hole.number}
-          </div>
-          <div style={{ color: "var(--sec)", fontSize: 13 }}>
-            Par {hole.par !== "" ? hole.par : "—"} · {hole.yards !== "" ? `${hole.yards} yds` : "—"}
-          </div>
+      <div className="screen-header">
+        <button className="back-btn" onClick={onClose}>
+          <span className="back-btn-chevron">‹</span>
+          <span>Scorecard</span>
+        </button>
+        <span className="screen-header-title">
+          Hole {hole.number} · Par {hole.par !== "" ? hole.par : "—"}
+        </span>
+        <div className="screen-header-action">
+          <span style={{ color: "var(--sec)", fontSize: 13 }}>
+            {hole.yards !== "" ? `${hole.yards}y` : ""}
+          </span>
         </div>
-        <button className="ghost-btn" onClick={onClose}>Scorecard</button>
       </div>
 
       {/* Progress dots */}
