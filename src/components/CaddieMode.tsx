@@ -3,7 +3,7 @@
 // Live GPS + course layout + wind + club recommendation
 // Design: Luxury Dark Metal (orange/bronze on near-black steel)
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { recommendClub, MY_BAG, MY_STATS, type ClubEntry } from "../data/playerProfile";
 import { CALUSA_CC, type CourseStrategyDoc } from "../data/courseStrategy";
 
@@ -465,11 +465,14 @@ interface CaddieModeProps {
 }
 
 export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
-  const hole: HoleData = { ...DEMO_HOLE, ...(currentHole ?? {}) };
+  const hole = useMemo<HoleData>(() => ({ ...DEMO_HOLE, ...(currentHole ?? {}) }), [currentHole]);
+  const geolocationAvailable = typeof navigator !== "undefined" && "geolocation" in navigator;
 
   // GPS state
   const [gpsPos, setGpsPos]         = useState<LatLon | null>(null);
-  const [gpsError, setGpsError]     = useState<string | null>(null);
+  const [gpsError, setGpsError]     = useState<string | null>(() =>
+    geolocationAvailable ? null : "GPS not available on this device"
+  );
   const [distToPin, setDistToPin]   = useState<number>(hole.yardage.white / 2); // start mid-hole
   const [distFromTee, setDistFromTee] = useState<number>(hole.yardage.white / 2);
   const watchRef = useRef<number | null>(null);
@@ -487,10 +490,8 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
 
   // GPS watch
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setGpsError("GPS not available on this device");
-      return;
-    }
+    if (!geolocationAvailable) return;
+
     watchRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         const coords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
@@ -510,7 +511,7 @@ export function CaddieMode({ onClose, currentHole }: CaddieModeProps) {
     return () => {
       if (watchRef.current !== null) navigator.geolocation.clearWatch(watchRef.current);
     };
-  }, [hole]);
+  }, [geolocationAvailable, hole.pinLatLon, hole.teeLatLon]);
 
   // Weather fetch
   useEffect(() => {
